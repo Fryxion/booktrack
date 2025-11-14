@@ -8,6 +8,14 @@ const BookTrackPrototype = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBook, setSelectedBook] = useState(null);
   
+  // Adicionar font do Google Fonts
+  React.useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+  }, []);
+  
   // Mock user data
   const userData = {
     nome: 'José Saramago',
@@ -92,15 +100,29 @@ const BookTrackPrototype = () => {
   ];
 
   const styles = {
+    // Cores da paleta BookTrack
+    colors: {
+      primary: '#2563EB',      // Azul vibrante
+      primaryDark: '#1E40AF',  // Azul escuro
+      primaryLight: '#60A5FA', // Azul claro
+      success: '#059669',      // Verde (disponível)
+      danger: '#DC2626',       // Vermelho (cancelar/erro)
+      textDark: '#1F2937',     // Texto principal
+      textMuted: '#6B7280',    // Texto secundário
+      bgLight: '#F9FAFB',      // Fundo claro
+      bgWhite: '#FFFFFF',      // Branco
+      border: '#E5E7EB'        // Bordas
+    },
+    
     // Estilos gerais anteriores mantidos
     loginContainer: {
       minHeight: '100vh',
-      backgroundColor: '#f9fafb',
+      backgroundColor: '#F9FAFB',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       padding: '2rem',
-      fontFamily: 'Arial, sans-serif'
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif"
     },
     loginBox: {
       backgroundColor: 'white',
@@ -144,7 +166,7 @@ const BookTrackPrototype = () => {
       outline: 'none',
       minHeight: '120px',
       resize: 'vertical',
-      fontFamily: 'Arial, sans-serif',
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif",
       boxSizing: 'border-box'
     },
     checkbox: {
@@ -159,7 +181,7 @@ const BookTrackPrototype = () => {
     },
     loginButton: {
       width: '100%',
-      backgroundColor: '#111827',
+      backgroundColor: '#2563EB',
       color: 'white',
       padding: '0.75rem',
       borderRadius: '0.5rem',
@@ -199,8 +221,14 @@ const BookTrackPrototype = () => {
       gap: '2rem'
     },
     logo: {
-      fontSize: '1.5rem',
-      fontWeight: 'bold'
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      cursor: 'pointer'
+    },
+    logoImage: {
+      height: '40px',
+      width: 'auto'
     },
     nav: {
       display: 'flex',
@@ -217,12 +245,13 @@ const BookTrackPrototype = () => {
     },
     navButtonActive: {
       padding: '0.5rem 1rem',
-      backgroundColor: '#e5e7eb',
+      backgroundColor: '#DBEAFE',
       border: 'none',
       borderRadius: '0.5rem',
       cursor: 'pointer',
       fontSize: '1rem',
-      fontWeight: '600'
+      fontWeight: '600',
+      color: '#2563EB'
     },
     userIcon: {
       padding: '0.5rem',
@@ -236,7 +265,7 @@ const BookTrackPrototype = () => {
     catalogContainer: {
       minHeight: '100vh',
       backgroundColor: '#f9fafb',
-      fontFamily: 'Arial, sans-serif'
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif"
     },
     catalogMain: {
       maxWidth: '80rem',
@@ -335,7 +364,7 @@ const BookTrackPrototype = () => {
     detailsContainer: {
       minHeight: '100vh',
       backgroundColor: '#f9fafb',
-      fontFamily: 'Arial, sans-serif'
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif"
     },
     detailsMain: {
       maxWidth: '70rem',
@@ -411,7 +440,7 @@ const BookTrackPrototype = () => {
     },
     reserveButton: {
       padding: '0.75rem 2rem',
-      backgroundColor: '#111827',
+      backgroundColor: '#2563EB',
       color: 'white',
       border: 'none',
       borderRadius: '9999px',
@@ -473,7 +502,7 @@ const BookTrackPrototype = () => {
     },
     primaryButton: {
       padding: '0.875rem 2rem',
-      backgroundColor: '#111827',
+      backgroundColor: '#2563EB',
       color: 'white',
       border: 'none',
       borderRadius: '9999px',
@@ -485,8 +514,8 @@ const BookTrackPrototype = () => {
     secondaryButton: {
       padding: '0.875rem 2rem',
       backgroundColor: 'white',
-      color: '#111827',
-      border: '2px solid #111827',
+      color: '#2563EB',
+      border: '2px solid #2563EB',
       borderRadius: '9999px',
       fontWeight: '600',
       cursor: 'pointer',
@@ -682,7 +711,9 @@ const BookTrackPrototype = () => {
             <label htmlFor="remember" style={{ fontSize: '0.875rem' }}>Lembrar conta</label>
           </div>
 
-          <button onClick={handleLogin} style={styles.loginButton}>
+          <button onClick={handleLogin} style={styles.loginButton}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1E40AF'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2563EB'}>
             Log In
           </button>
 
@@ -697,11 +728,32 @@ const BookTrackPrototype = () => {
   );
 
   const Header = ({ activePage }) => (
-    <header style={styles.header}>
+    <header style={styles.header} role="banner">
       <div style={styles.headerContent}>
         <div style={styles.headerLeft}>
-          <h1 style={styles.logo}>BookTrack</h1>
-          <nav style={styles.nav}>
+          <div style={styles.logo} onClick={() => setCurrentPage('inicio')}>
+            <img 
+              src="/logo-booktrack.png" 
+              alt="BookTrack Logo" 
+              style={styles.logoImage}
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+            <div style={{ 
+              display: 'none', 
+              alignItems: 'center', 
+              gap: '0.5rem',
+              fontSize: '1.5rem',
+              fontWeight: 'bold',
+              color: '#2563EB'
+            }}>
+              <span style={{ fontSize: '1.75rem' }}>📚</span>
+              <span>BookTrack</span>
+            </div>
+          </div>
+          <nav style={styles.nav} role="navigation" aria-label="Menu principal">
             <button 
               onClick={() => setCurrentPage('inicio')} 
               style={activePage === 'inicio' ? styles.navButtonActive : styles.navButton}
@@ -733,7 +785,7 @@ const BookTrackPrototype = () => {
     <div style={styles.catalogContainer}>
       <Header activePage="inicio" />
       
-      <main style={styles.catalogMain}>
+      <main style={styles.catalogMain} role="main">
         <div style={styles.heroSection}>
           <h1 style={styles.heroTitle}>BEM VINDO À LIVRARIA</h1>
           <div style={styles.heroDescription}>
@@ -748,8 +800,8 @@ const BookTrackPrototype = () => {
             <button 
               onClick={() => setCurrentPage('catalogo')} 
               style={styles.primaryButton}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1f2937'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#111827'}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1E40AF'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2563EB'}
             >
               Pesquisar
             </button>
@@ -757,12 +809,12 @@ const BookTrackPrototype = () => {
               onClick={() => setCurrentPage('perfil')} 
               style={styles.secondaryButton}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#111827';
+                e.currentTarget.style.backgroundColor = '#2563EB';
                 e.currentTarget.style.color = 'white';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = 'white';
-                e.currentTarget.style.color = '#111827';
+                e.currentTarget.style.color = '#2563EB';
               }}
             >
               Reservar
@@ -777,7 +829,7 @@ const BookTrackPrototype = () => {
     <div style={styles.catalogContainer}>
       <Header activePage="sobre" />
       
-      <main style={styles.catalogMain}>
+      <main style={styles.catalogMain} role="main">
         <h1 style={styles.catalogTitle}>SOBRE NÓS</h1>
         
         <div style={styles.detailsBox}>
@@ -806,7 +858,7 @@ const BookTrackPrototype = () => {
     <div style={styles.catalogContainer}>
       <Header activePage="perfil" />
       
-      <main style={styles.catalogMain}>
+      <main style={styles.catalogMain} role="main">
         <h1 style={styles.catalogTitle}>PERFIL</h1>
         
         <div style={styles.detailsBox}>
@@ -880,7 +932,7 @@ const BookTrackPrototype = () => {
     <div style={styles.catalogContainer}>
       <Header activePage="perfil" />
       
-      <main style={styles.catalogMain}>
+      <main style={styles.catalogMain} role="main">
         <h1 style={styles.catalogTitle}>RESERVAS</h1>
         
         <div style={styles.detailsBox}>
@@ -937,7 +989,7 @@ const BookTrackPrototype = () => {
       <div style={styles.catalogContainer}>
         <Header activePage="catalogo" />
         
-        <main style={styles.catalogMain}>
+        <main style={styles.catalogMain} role="main">
           <h1 style={styles.catalogTitle}>CATÁLOGO</h1>
           
           <div style={styles.searchContainer}>
@@ -1004,7 +1056,7 @@ const BookTrackPrototype = () => {
       <div style={styles.detailsContainer}>
         <Header activePage="catalogo" />
         
-        <main style={styles.detailsMain}>
+        <main style={styles.detailsMain} role="main">
           <h1 style={styles.catalogTitle}>DETALHES DO LIVRO</h1>
           
           <div style={styles.detailsBox}>
@@ -1051,8 +1103,8 @@ const BookTrackPrototype = () => {
                 <button
                   onClick={handleReservar}
                   style={styles.reserveButton}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1f2937'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#111827'}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1E40AF'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2563EB'}
                 >
                   Reservar
                 </button>
