@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookTrack - Sistema de Gestão de Biblioteca</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background-color: #F9FAFB;
+            color: #1F2937;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            border-bottom: 2px solid #E5E7EB;
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            max-width: 80rem;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2563EB;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        nav a {
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            color: #1F2937;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            background-color: #F3F4F6;
+        }
+
+        nav a.active {
+            background-color: #DBEAFE;
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #D1D5DB;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2563EB;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: #2563EB;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1E40AF;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: #2563EB;
+            border: 2px solid #2563EB;
+        }
+
+        .btn-secondary:hover {
+            background-color: #2563EB;
+            color: white;
+        }
+
+        /* Search */
+        .search-container {
+            max-width: 48rem;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9CA3AF;
+            font-size: 1.25rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 2px solid #D1D5DB;
+            border-radius: 9999px;
+            font-size: 1rem;
+        }
+
+        /* Books List */
+        .books-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            display: flex;
+            gap: 1.5rem;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+
+        .book-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-cover {
+            width: 8rem;
+            height: 12rem;
+            background-color: #E5E7EB;
+            border-radius: 0.25rem;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .book-info {
+            flex: 1;
+        }
+
+        .book-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-detail {
+            color: #6B7280;
+            margin-bottom: 0.25rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 0.75rem;
+        }
+
+        .badge-available {
+            background-color: #D1FAE5;
+            color: #065F46;
+        }
+
+        .badge-unavailable {
+            background-color: #FEE2E2;
+            color: #991B1B;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        /* Details Box */
+        .details-box {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        .details-top {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .details-cover {
+            width: 16rem;
+            height: 24rem;
+            background-color: #E5E7EB;
+            border-radius: 0.25rem;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+        }
+
+        .description {
+            flex: 1;
+            color: #6B7280;
+            line-height: 1.7;
+        }
+
+        .info-field {
+            margin-bottom: 1rem;
+        }
+
+        .field-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #6B7280;
+            margin-bottom: 0.25rem;
+        }
+
+        .field-value {
+            padding: 0.75rem 1rem;
+            background-color: #F9FAFB;
+            border: 2px solid #E5E7EB;
+            border-radius: 0.5rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none;
+        }
+
+        .mt-2 {
+            margin-top: 2rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- INICIO PAGE -->
+    <div id="inicioPage">
+        <header>
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo" onclick="showPage('inicioPage')">
+                        <span style="font-size: 1.75rem;">📚</span>
+                        <span>BookTrack</span>
+                    </div>
+                    <nav>
+                        <a class="active" onclick="showPage('inicioPage')">Início</a>
+                        <a onclick="showPage('catalogoPage')">Catálogo</a>
+                        <a onclick="showPage('sobrePage')">Sobre nós</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="hero-section">
+                <h1 class="hero-title">BEM-VINDO À BIBLIOTECA</h1>
+                <textarea readonly>Explore o nosso vasto catálogo de livros, descubra novas obras e encontre informações detalhadas sobre cada título. O BookTrack torna a gestão da biblioteca escolar mais fácil e acessível para todos.</textarea>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="showPage('catalogoPage')">Explorar Catálogo</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- CATALOGO PAGE -->
+    <div id="catalogoPage" class="hidden">
+        <header>
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo" onclick="showPage('inicioPage')">
+                        <span style="font-size: 1.75rem;">📚</span>
+                        <span>BookTrack</span>
+                    </div>
+                    <nav>
+                        <a onclick="showPage('inicioPage')">Início</a>
+                        <a class="active" onclick="showPage('catalogoPage')">Catálogo</a>
+                        <a onclick="showPage('sobrePage')">Sobre nós</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <h1 class="page-title">CATÁLOGO</h1>
+
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="Pesquisar por título ou autor...">
+            </div>
+
+            <div class="books-list" id="booksList">
+                <div class="book-card" onclick="showBookDetails('Os Lusíadas', 'Luís de Camões', '1572', 'Poesia Épica', 'Epopeia que narra os feitos dos navegadores portugueses, principalmente Vasco da Gama na descoberta do caminho marítimo para a Índia.', true)">
+                    <div class="book-cover">📚</div>
+                    <div class="book-info">
+                        <h3 class="book-title">Os Lusíadas</h3>
+                        <p class="book-detail">Autor: Luís de Camões</p>
+                        <p class="book-detail">Publicação: 1572</p>
+                        <p class="book-detail">Categoria: Poesia Épica</p>
+                        <span class="badge badge-available">Disponível</span>
+                    </div>
+                    <span style="font-size: 1.5rem; color: #9CA3AF;">›</span>
+                </div>
+
+                <div class="book-card" onclick="showBookDetails('Memorial do Convento', 'José Saramago', '1982', 'Romance Histórico', 'Romance histórico sobre a construção do Convento de Mafra no século XVIII, entrelaçando as vidas de Baltasar e Blimunda.', true)">
+                    <div class="book-cover">📚</div>
+                    <div class="book-info">
+                        <h3 class="book-title">Memorial do Convento</h3>
+                        <p class="book-detail">Autor: José Saramago</p>
+                        <p class="book-detail">Publicação: 1982</p>
+                        <p class="book-detail">Categoria: Romance Histórico</p>
+                        <span class="badge badge-available">Disponível</span>
+                    </div>
+                    <span style="font-size: 1.5rem; color: #9CA3AF;">›</span>
+                </div>
+
+                <div class="book-card" onclick="showBookDetails('Mensagem', 'Fernando Pessoa', '1934', 'Poesia', 'Obra poética sobre a história e o destino de Portugal, dividida em três partes: Brasão, Mar Português e O Encoberto.', false)">
+                    <div class="book-cover">📚</div>
+                    <div class="book-info">
+                        <h3 class="book-title">Mensagem</h3>
+                        <p class="book-detail">Autor: Fernando Pessoa</p>
+                        <p class="book-detail">Publicação: 1934</p>
+                        <p class="book-detail">Categoria: Poesia</p>
+                        <span class="badge badge-unavailable">Indisponível</span>
+                    </div>
+                    <span style="font-size: 1.5rem; color: #9CA3AF;">›</span>
+                </div>
+
+                <div class="book-card" onclick="showBookDetails('A Cidade e as Serras', 'Eça de Queirós', '1901', 'Romance', 'Romance que contrasta a vida na cidade de Paris com a vida rural nas serras portuguesas, através da personagem Jacinto.', true)">
+                    <div class="book-cover">📚</div>
+                    <div class="book-info">
+                        <h3 class="book-title">A Cidade e as Serras</h3>
+                        <p class="book-detail">Autor: Eça de Queirós</p>
+                        <p class="book-detail">Publicação: 1901</p>
+                        <p class="book-detail">Categoria: Romance</p>
+                        <span class="badge badge-available">Disponível</span>
+                    </div>
+                    <span style="font-size: 1.5rem; color: #9CA3AF;">›</span>
+                </div>
+
+                <div class="book-card" onclick="showBookDetails('O Crime do Padre Amaro', 'Eça de Queirós', '1875', 'Romance Realista', 'Romance realista que retrata a hipocrisia e corrupção do clero numa pequena cidade portuguesa.', true)">
+                    <div class="book-cover">📚</div>
+                    <div class="book-info">
+                        <h3 class="book-title">O Crime do Padre Amaro</h3>
+                        <p class="book-detail">Autor: Eça de Queirós</p>
+                        <p class="book-detail">Publicação: 1875</p>
+                        <p class="book-detail">Categoria: Romance Realista</p>
+                        <span class="badge badge-available">Disponível</span>
+                    </div>
+                    <span style="font-size: 1.5rem; color: #9CA3AF;">›</span>
+                </div>
+            </div>
+
+            <div id="noResults" class="text-center mt-2 hidden" style="padding: 3rem; color: #6B7280; font-size: 1.125rem;">
+                <p>Nenhum livro encontrado.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- DETALHES PAGE -->
+    <div id="detalhesPage" class="hidden">
+        <header>
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo" onclick="showPage('inicioPage')">
+                        <span style="font-size: 1.75rem;">📚</span>
+                        <span>BookTrack</span>
+                    </div>
+                    <nav>
+                        <a onclick="showPage('inicioPage')">Início</a>
+                        <a class="active" onclick="showPage('catalogoPage')">Catálogo</a>
+                        <a onclick="showPage('sobrePage')">Sobre nós</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <h1 class="page-title">DETALHES DO LIVRO</h1>
+
+            <div class="details-box">
+                <div class="details-top">
+                    <div class="details-cover">📚</div>
+                    <div class="description">
+                        <p id="bookDescription"></p>
+                    </div>
+                </div>
+
+                <div class="info-field">
+                    <div class="field-label">Título</div>
+                    <div class="field-value" id="bookTitle"></div>
+                </div>
+
+                <div class="info-field">
+                    <div class="field-label">Autor</div>
+                    <div class="field-value" id="bookAuthor"></div>
+                </div>
+
+                <div class="info-field">
+                    <div class="field-label">Publicação</div>
+                    <div class="field-value" id="bookYear"></div>
+                </div>
+
+                <div class="info-field">
+                    <div class="field-label">Categoria</div>
+                    <div class="field-value" id="bookCategory"></div>
+                </div>
+
+                <div class="info-field">
+                    <div class="field-label">Disponibilidade</div>
+                    <div class="field-value">
+                        <span id="bookAvailability"></span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="showPage('catalogoPage')">Voltar ao Catálogo</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SOBRE PAGE -->
+    <div id="sobrePage" class="hidden">
+        <header>
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo" onclick="showPage('inicioPage')">
+                        <span style="font-size: 1.75rem;">📚</span>
+                        <span>BookTrack</span>
+                    </div>
+                    <nav>
+                        <a onclick="showPage('inicioPage')">Início</a>
+                        <a onclick="showPage('catalogoPage')">Catálogo</a>
+                        <a class="active" onclick="showPage('sobrePage')">Sobre nós</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <h1 class="page-title">SOBRE NÓS</h1>
+
+            <div class="details-box">
+                <div style="display: flex; gap: 3rem; margin-bottom: 3rem; flex-wrap: wrap;">
+                    <div style="width: 400px; height: 300px; background-color: #E5E7EB; border-radius: 0.5rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 4rem;">🏫</div>
+                    <div style="flex: 1; min-width: 300px;">
+                        <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Nossa Missão</h2>
+                        <p style="color: #6B7280; line-height: 1.7; margin-bottom: 1rem;">
+                            O BookTrack é um sistema de gestão de biblioteca escolar desenvolvido para tornar o acesso aos livros mais fácil e eficiente.
+                        </p>
+                        <p style="color: #6B7280; line-height: 1.7;">
+                            Nossa missão é promover a leitura e facilitar a descoberta de novas obras para toda a comunidade escolar, proporcionando uma experiência simples e intuitiva de consulta ao catálogo.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-2">
+                    <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 2rem;">Onde estamos localizados</h2>
+                    <div style="width: 100%; max-width: 800px; height: 400px; background-color: #E5E7EB; border-radius: 0.5rem; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 3rem;">🗺️</div>
+                    <p style="margin-top: 1rem; color: #6B7280;">Biblioteca Escolar - Rua Exemplo, 123 - Porto, Portugal</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Função para mostrar páginas
+        function showPage(pageId) {
+            const pages = ['inicioPage', 'catalogoPage', 'detalhesPage', 'sobrePage'];
+            
+            pages.forEach(page => {
+                document.getElementById(page).classList.add('hidden');
+            });
+            
+            document.getElementById(pageId).classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        // Função para mostrar detalhes do livro
+        function showBookDetails(title, author, year, category, description, available) {
+            document.getElementById('bookTitle').textContent = title;
+            document.getElementById('bookAuthor').textContent = author;
+            document.getElementById('bookYear').textContent = year;
+            document.getElementById('bookCategory').textContent = category;
+            document.getElementById('bookDescription').textContent = description;
+            
+            const availabilityEl = document.getElementById('bookAvailability');
+            if (available) {
+                availabilityEl.innerHTML = '<span class="badge badge-available">Disponível</span>';
+            } else {
+                availabilityEl.innerHTML = '<span class="badge badge-unavailable">Indisponível</span>';
+            }
+            
+            showPage('detalhesPage');
+        }
+
+        // Funcionalidade de pesquisa
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase();
+                const bookCards = document.querySelectorAll('#booksList .book-card');
+                const noResults = document.getElementById('noResults');
+                let hasResults = false;
+                
+                bookCards.forEach(card => {
+                    const title = card.querySelector('.book-title').textContent.toLowerCase();
+                    const author = card.querySelectorAll('.book-detail')[0].textContent.toLowerCase();
+                    
+                    if (title.includes(query) || author.includes(query)) {
+                        card.style.display = 'flex';
+                        hasResults = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                if (hasResults || query === '') {
+                    noResults.classList.add('hidden');
+                } else {
+                    noResults.classList.remove('hidden');
+                }
+            });
+        }
+
+        // Mostrar página inicial
+        showPage('inicioPage');
+    </script>
+
+</body>
+</html>
