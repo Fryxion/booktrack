@@ -739,7 +739,7 @@ const BookTrackPrototype = () => {
           <div style={styles.heroDescription}>
             <textarea 
               style={styles.textarea}
-              placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Descubra nossa coleção de livros e reserve os seus favoritos de forma simples e rápida."
+              placeholder="Descubra nossa coleção de livros e reserve os seus favoritos de forma simples e rápida."
               readOnly
               value="Explore o nosso vasto catálogo de livros, faça reservas online e acompanhe o seu histórico de leituras. O BookTrack torna a gestão da biblioteca escolar mais fácil e acessível para todos."
             />
@@ -786,7 +786,7 @@ const BookTrackPrototype = () => {
             <div style={styles.aboutContent}>
               <textarea 
                 style={styles.textarea}
-                placeholder="Lorem ipsum..."
+                placeholder="..."
                 value="O BookTrack é um sistema de gestão de biblioteca escolar desenvolvido para tornar o acesso aos livros mais fácil e eficiente. Nossa missão é promover a leitura e facilitar o processo de empréstimo de livros para toda a comunidade escolar."
                 readOnly
               />
