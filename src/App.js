@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const BookTrackPrototype = () => {
   const [currentPage, setCurrentPage] = useState('login');
@@ -7,6 +7,13 @@ const BookTrackPrototype = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBook, setSelectedBook] = useState(null);
+  
+  // Refs to maintain focus on inputs
+  const emailInputRef = useRef(null);
+  const passwordInputRef = useRef(null);
+  const searchInputRef = useRef(null);
+  const searchDebounceRef = useRef(null);
+  
   
   // Adicionar font do Google Fonts
   React.useEffect(() => {
@@ -653,7 +660,12 @@ const BookTrackPrototype = () => {
   };
 
   const handleLogin = () => {
-    if (email && password) {
+    // read values from refs (uncontrolled inputs) to avoid re-render on each keystroke
+    const emailVal = emailInputRef.current ? emailInputRef.current.value : email;
+    const pwVal = passwordInputRef.current ? passwordInputRef.current.value : password;
+    if (emailVal && pwVal) {
+      setEmail(emailVal);
+      setPassword(pwVal);
       setCurrentPage('inicio');
     }
   };
@@ -681,9 +693,10 @@ const BookTrackPrototype = () => {
           <div style={styles.inputGroup}>
             <label style={styles.label}>Email</label>
             <input
+              ref={emailInputRef}
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              defaultValue={email}
+              // uncontrolled: don't set state on every keystroke
               style={styles.input}
               placeholder="seu.email@exemplo.com"
             />
@@ -692,9 +705,10 @@ const BookTrackPrototype = () => {
           <div style={styles.inputGroup}>
             <label style={styles.label}>Password</label>
             <input
+              ref={passwordInputRef}
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              defaultValue={password}
+              // uncontrolled: don't set state on every keystroke
               style={styles.input}
               placeholder="••••••••"
             />
@@ -996,9 +1010,17 @@ const BookTrackPrototype = () => {
             <div style={styles.searchInputWrapper}>
               <span style={styles.searchIcon}>🔍</span>
               <input
+                ref={searchInputRef}
                 type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                defaultValue={searchQuery}
+                onInput={(e) => {
+                  // update ref immediately but debounce updating state to avoid re-renders per keystroke
+                  if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+                  const val = e.target.value;
+                  searchDebounceRef.current = setTimeout(() => {
+                    setSearchQuery(val);
+                  }, 250);
+                }}
                 placeholder="Pesquisar por título ou autor..."
                 style={styles.searchInput}
               />
