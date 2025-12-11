@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import '../styles/App.css';
 
 const BookTrackPrototype = () => {
   const [currentPage, setCurrentPage] = useState('login');
