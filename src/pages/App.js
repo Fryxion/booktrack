@@ -1,4 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
+import LoginPage from './Login/App';
+import InicioPage from './Inicio/App';
+import SobrePage from './Sobre/App';
+import PerfilPage from './Perfil/App';
+import ReservasPage from './Reservas/App';
+import CatalogoPage from './Catalogo/App';
+import DetalhesPage from './Detalhes/App';
 
 const BookTrackPrototype = () => {
   const [currentPage, setCurrentPage] = useState('login');
@@ -14,16 +21,15 @@ const BookTrackPrototype = () => {
   const searchInputRef = useRef(null);
   const searchDebounceRef = useRef(null);
   
-  
   // Adicionar font do Google Fonts
-  React.useEffect(() => {
+  useEffect(() => {
     const link = document.createElement('link');
     link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap';
     link.rel = 'stylesheet';
     document.head.appendChild(link);
   }, []);
   
-  // Mock user data
+  // Temporário mock user data
   const userData = {
     nome: 'José Saramago',
     email: 'josesaramago@gmail.com',
@@ -31,7 +37,7 @@ const BookTrackPrototype = () => {
     dataRegisto: '15/09/2025'
   };
 
-  // Mock reservas ativas
+  // Temporário mock reservas ativas
   const reservasAtivas = [
     {
       id: 1,
@@ -49,7 +55,7 @@ const BookTrackPrototype = () => {
     }
   ];
 
-  // Mock histórico de empréstimos
+  // Temporário mock histórico de empréstimos
   const historicoEmprestimos = [
     {
       id: 1,
@@ -106,7 +112,90 @@ const BookTrackPrototype = () => {
     }
   ];
 
-  const styles = {
+  const handleLogin = () => {
+    // read values from refs (uncontrolled inputs) to avoid re-render on each keystroke
+    const emailVal = emailInputRef.current ? emailInputRef.current.value : email;
+    const pwVal = passwordInputRef.current ? passwordInputRef.current.value : password;
+    if (emailVal && pwVal) {
+      setEmail(emailVal);
+      setPassword(pwVal);
+      setCurrentPage('inicio');
+    }
+  };
+
+  const handleBookClick = (book) => {
+    setSelectedBook(book);
+    setCurrentPage('detalhes');
+  };
+
+  const handleReservar = () => {
+    alert('Reserva efetuada com sucesso! Receberá um email de confirmação.');
+    setCurrentPage('catalogo');
+  };
+
+  const handleCancelarReserva = (id) => {
+    alert(`Reserva #${id} cancelada com sucesso!`);
+  };
+
+  return (
+    <div>
+      {currentPage === 'login' && (
+        <LoginPage 
+          email={email}
+          password={password}
+          rememberMe={rememberMe}
+          setRememberMe={setRememberMe}
+          emailInputRef={emailInputRef}
+          passwordInputRef={passwordInputRef}
+          handleLogin={handleLogin}
+        />
+      )}
+      {currentPage === 'inicio' && (
+        <InicioPage setCurrentPage={setCurrentPage} />
+      )}
+      {currentPage === 'catalogo' && (
+        <CatalogoPage 
+          books={books}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          searchInputRef={searchInputRef}
+          searchDebounceRef={searchDebounceRef}
+          handleBookClick={handleBookClick}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
+      {currentPage === 'detalhes' && (
+        <DetalhesPage 
+          selectedBook={selectedBook}
+          setCurrentPage={setCurrentPage}
+          handleReservar={handleReservar}
+        />
+      )}
+      {currentPage === 'sobre' && (
+        <SobrePage setCurrentPage={setCurrentPage} />
+      )}
+      {currentPage === 'perfil' && (
+        <PerfilPage 
+          userData={userData}
+          historicoEmprestimos={historicoEmprestimos}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
+      {currentPage === 'reservas' && (
+        <ReservasPage 
+          reservasAtivas={reservasAtivas}
+          handleCancelarReserva={handleCancelarReserva}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
+    </div>
+  );
+};
+
+export default BookTrackPrototype;
+
+/* ===== CÓDIGO ANTIGO COMENTADO COMO BACKUP =====
+
     // Cores da paleta BookTrack
     colors: {
       primary: '#2563EB',      // Azul vibrante
@@ -1156,3 +1245,5 @@ const BookTrackPrototype = () => {
 };
 
 export default BookTrackPrototype;
+
+===== FIM DO CÓDIGO ANTIGO COMENTADO ===== */
