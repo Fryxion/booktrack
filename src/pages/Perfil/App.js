@@ -2,7 +2,7 @@ import React from 'react';
 import Header from '../../components/Header/App';
 import '../../styles/App.css';
 
-const PerfilPage = ({ userData, historicoEmprestimos, setCurrentPage }) => (
+const PerfilPage = ({ userData, historicoEmprestimos, setCurrentPage, onEditProfile, onChangePassword, onLogout }) => (
   <div className="catalog-container">
     <Header activePage="perfil" setCurrentPage={setCurrentPage} />
     
@@ -17,10 +17,10 @@ const PerfilPage = ({ userData, historicoEmprestimos, setCurrentPage }) => (
         </div>
 
         <div className="profile-actions">
-          <button className="profile-button">
+          <button className="profile-button" onClick={onEditProfile}>
             Editar perfil
           </button>
-          <button className="profile-button">
+          <button className="profile-button" onClick={onChangePassword}>
             Alterar password
           </button>
           <button 
@@ -30,7 +30,7 @@ const PerfilPage = ({ userData, historicoEmprestimos, setCurrentPage }) => (
             Consultar reservas
           </button>
           <button 
-            onClick={() => setCurrentPage('login')} 
+            onClick={onLogout}
             className="logout-button"
           >
             Log out

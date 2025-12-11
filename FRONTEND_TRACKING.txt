@@ -1,0 +1,310 @@
+================================================================================
+                    BOOKTRACK - TRACKING DE REQUISITOS FRONTEND
+================================================================================
+Data de criação: 11 Dezembro 2025
+Projeto: Sistema de Gestão de Biblioteca Escolar
+Responsável: Frontend (dfdan)
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         ✅ JÁ IMPLEMENTADO (100%)                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+[✓] Estrutura do Projeto
+    [✓] Organização em componentes modulares
+    [✓] Separação de páginas (src/pages/)
+    [✓] Componente Header reutilizável
+    [✓] CSS centralizado (src/styles/App.css)
+
+[✓] Páginas Principais (9/9)
+    [✓] Login - Interface de autenticação
+    [✓] Início - Hero section com boas-vindas
+    [✓] Catálogo - Listagem de livros
+    [✓] Detalhes - Página individual do livro
+    [✓] Sobre - Informação institucional
+    [✓] Perfil - Dados do utilizador
+    [✓] Reservas - Gestão de reservas ativas
+    [✓] Header - Navegação global
+    [✓] Busca - Pesquisa por título/autor com debounce
+
+[✓] Funcionalidades Core
+    [✓] Navegação entre páginas (estado condicional)
+    [✓] Sistema de busca com debounce (250ms)
+    [✓] Filtro de livros por texto
+    [✓] Badges de disponibilidade
+    [✓] Inputs com refs (foco preservado)
+    [✓] Mock data (livros, utilizador, histórico, reservas)
+
+
+================================================================================
+                        📋 ORDEM DE IMPLEMENTAÇÃO RECOMENDADA
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        🔴 PRIORIDADE ALTA (CRÍTICO)                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+FASE 1: VALIDAÇÕES E FEEDBACK BÁSICO (Essencial para UX)
+─────────────────────────────────────────────────────────
+[X] 1.1 Validação de Login ✅ COMPLETO - 11/12/2025
+    [X] Validar formato de email
+    [X] Validar password não vazia
+    [X] Mostrar erros visuais nos campos
+    [X] Desabilitar botão durante validação
+    
+[X] 1.2 Mensagens de Feedback ✅ COMPLETO - 11/12/2025
+    [X] Toast/Snackbar component (sucesso/erro)
+    [X] Mensagem após reserva bem-sucedida
+    [X] Mensagem após cancelamento de reserva
+    [X] Feedback visual em ações do utilizador
+
+[X] 1.3 Estados de Loading ✅ COMPLETO - 11/12/2025
+    [X] Spinner/loading durante login
+    [X] Loading ao carregar dados
+    [ ] Skeleton screens (opcional - não necessário por agora)
+
+[X] 1.4 Confirmações ✅ COMPLETO - 11/12/2025
+    [X] Modal de confirmação antes de cancelar reserva
+    [ ] Confirmação antes de logout (não implementado ainda pois logout não funcional)
+    
+Tempo estimado: 3-4 horas
+Tempo real: ~2 horas ✅
+
+
+FASE 2: FILTROS E ORDENAÇÃO (Funcionalidade pedida)
+────────────────────────────────────────────────────
+[ ] 2.1 Filtros no Catálogo
+    [ ] Dropdown de categorias
+    [ ] Filtro por disponibilidade (toggle/checkbox)
+    [ ] Limpar filtros (botão reset)
+    
+[ ] 2.2 Ordenação
+    [ ] Ordenar A-Z (título)
+    [ ] Ordenar Z-A (título)
+    [ ] Mais recentes (ano publicação)
+    [ ] Mais antigos (ano publicação)
+    
+[ ] 2.3 UI dos Filtros
+    [ ] Sidebar ou top bar com filtros
+    [ ] Contador de resultados
+    [ ] Design limpo e intuitivo
+
+Tempo estimado: 2-3 horas
+
+
+FASE 3: RESPONSIVIDADE MOBILE (Importante para utilização real)
+────────────────────────────────────────────────────────────────
+[ ] 3.1 Header Mobile
+    [ ] Menu hambúrguer
+    [ ] Sidebar/drawer menu
+    [ ] Fechar menu ao clicar em item
+    
+[ ] 3.2 Layout Mobile
+    [ ] Cards de livros em coluna única
+    [ ] Botões com tamanho adequado (min 44px)
+    [ ] Espaçamento adequado para touch
+    
+[ ] 3.3 Breakpoints
+    [ ] Mobile: < 640px
+    [ ] Tablet: 640px - 1024px
+    [ ] Desktop: > 1024px
+    
+[ ] 3.4 Testes
+    [ ] Testar em Chrome DevTools
+    [ ] Testar em dispositivo real (se possível)
+
+Tempo estimado: 3-4 horas
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        🟡 PRIORIDADE MÉDIA (IMPORTANTE)                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+FASE 4: EDIÇÃO DE PERFIL (UI apenas)
+─────────────────────────────────────
+[ ] 4.1 Formulário de Edição
+    [ ] Modal/página de edição de dados
+    [ ] Campos: nome, email
+    [ ] Botão salvar/cancelar
+    [ ] Validação de campos
+    
+[ ] 4.2 Alteração de Password
+    [ ] Modal de alteração
+    [ ] Campos: password atual, nova, confirmar
+    [ ] Validação de match
+    [ ] Mostrar força da password
+    
+[ ] 4.3 Foto de Perfil (UI)
+    [ ] Botão upload de imagem
+    [ ] Preview da imagem
+    [ ] Crop/resize (opcional)
+
+Tempo estimado: 2-3 horas
+
+
+FASE 5: PAGINAÇÃO E EMPTY STATES
+─────────────────────────────────
+[ ] 5.1 Paginação do Catálogo
+    [ ] Componente de paginação
+    [ ] Botões anterior/próximo
+    [ ] Números de página
+    [ ] "Mostrar X por página"
+    
+[ ] 5.2 Empty States Melhorados
+    [ ] Ícone/ilustração para estado vazio
+    [ ] Mensagem amigável
+    [ ] Call-to-action (quando aplicável)
+    [ ] Aplicar em: catálogo, reservas, histórico
+
+Tempo estimado: 2 horas
+
+
+FASE 6: MELHORIAS VISUAIS
+──────────────────────────
+[ ] 6.1 Imagens Reais
+    [ ] Substituir emojis por imagens de capas
+    [ ] Avatar padrão para utilizador
+    [ ] Logo da escola
+    [ ] Ícones SVG (em vez de texto)
+    
+[ ] 6.2 Transições e Animações
+    [ ] Fade in/out entre páginas
+    [ ] Hover effects suaves
+    [ ] Loading animations
+    [ ] Scroll suave
+    
+[ ] 6.3 Mapa na Página Sobre
+    [ ] Integrar Google Maps (ou alternativa)
+    [ ] Ou usar imagem estática do mapa
+
+Tempo estimado: 2-3 horas
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        🟢 PRIORIDADE BAIXA (NICE-TO-HAVE)                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+FASE 7: ACESSIBILIDADE (A11y)
+──────────────────────────────
+[ ] 7.1 ARIA Labels
+    [ ] Aria-labels em botões
+    [ ] Roles apropriados
+    [ ] Aria-describedby para erros
+    
+[ ] 7.2 Navegação por Teclado
+    [ ] Tab order lógico
+    [ ] Focus trap em modals
+    [ ] Atalhos de teclado (opcional)
+    
+[ ] 7.3 Visual
+    [ ] Focus indicators visíveis
+    [ ] Contrast ratio WCAG AA
+    [ ] Alt text em imagens
+
+Tempo estimado: 2-3 horas
+
+
+FASE 8: OTIMIZAÇÕES
+───────────────────
+[ ] 8.1 Performance
+    [ ] React.memo em componentes pesados
+    [ ] useMemo/useCallback onde necessário
+    [ ] Lazy loading de páginas
+    [ ] Code splitting
+    
+[ ] 8.2 SEO e Meta Tags
+    [ ] Title dinâmico por página
+    [ ] Meta descriptions
+    [ ] Open Graph tags
+    
+[ ] 8.3 PWA (Opcional)
+    [ ] Service Worker
+    [ ] Manifest.json
+    [ ] Offline support básico
+
+Tempo estimado: 3-4 horas
+
+
+FASE 9: EXTRAS (SE HOUVER TEMPO)
+─────────────────────────────────
+[ ] 9.1 React Router
+    [ ] Substituir navegação condicional
+    [ ] URLs amigáveis (/login, /catalogo, /livro/:id)
+    [ ] Histórico de navegação
+    
+[ ] 9.2 Context API
+    [ ] Contexto global para utilizador
+    [ ] Contexto para notificações
+    [ ] Evitar prop drilling
+    
+[ ] 9.3 Testes (se pedido)
+    [ ] Testes unitários (Jest)
+    [ ] Testes de componentes (React Testing Library)
+    [ ] Testes E2E (Cypress/Playwright)
+
+Tempo estimado: 5-8 horas
+
+
+================================================================================
+                              📊 ESTATÍSTICAS
+================================================================================
+
+TOTAL DE TAREFAS: ~60 itens
+TEMPO ESTIMADO TOTAL: 25-35 horas
+
+DISTRIBUIÇÃO:
+├─ Prioridade Alta:    ~12 horas (crítico)
+├─ Prioridade Média:   ~6 horas  (importante)
+└─ Prioridade Baixa:   ~10 horas (nice-to-have)
+
+
+RECOMENDAÇÃO PARA ENTREGA ESCOLAR:
+───────────────────────────────────
+Focar em: FASE 1, FASE 2, FASE 3
+Tempo: 8-11 horas
+Resultado: Sistema funcional e apresentável
+
+
+================================================================================
+                              📝 NOTAS
+================================================================================
+
+• Este ficheiro NÃO afeta o projeto, é apenas para tracking
+• Marca com [X] conforme fores completando
+• Adiciona datas de conclusão ao lado se quiseres
+• Podes reordenar prioridades conforme necessário
+• Guarda commits regulares durante o desenvolvimento
+
+LEGENDA:
+[ ] = Por fazer
+[X] = Completo
+[~] = Em progresso
+[-] = Cancelado/Não necessário
+
+
+================================================================================
+                         PRÓXIMO PASSO RECOMENDADO
+================================================================================
+
+Começar por: FASE 1.1 - Validação de Login
+Motivo: Base para todas as outras funcionalidades de formulário
+Tempo: ~1 hora
+Impacto: Alto (melhora UX imediatamente)
+
+
+================================================================================
+ÚLTIMA ATUALIZAÇÃO: 11 Dezembro 2025 - 21:30
+================================================================================
+
+MELHORIAS ADICIONAIS IMPLEMENTADAS (11/12/2025):
+═══════════════════════════════════════════════════════════════════════════════
+
+[X] ✅ Removido botão "Início" do Header (duplicado com logo)
+[X] ✅ Modal de confirmação de logout implementado
+[X] ✅ Animação fade-out ao fechar toast manualmente
+[X] ✅ Estado de reservas atualiza ao cancelar (desaparece da lista)
+[X] ✅ Modal "Esqueceu-se da password?" funcional
+[X] ✅ Modal "Editar perfil" implementado (placeholder)
+[X] ✅ Modal "Alterar password" implementado (placeholder)
+
+TOTAL DE MELHORIAS: 7 itens adicionais implementados!

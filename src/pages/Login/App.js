@@ -8,7 +8,11 @@ const LoginPage = ({
   setRememberMe, 
   emailInputRef, 
   passwordInputRef, 
-  handleLogin 
+  handleLogin,
+  emailError,
+  passwordError,
+  isLoading,
+  onForgotPassword
 }) => (
   <main className="login-container">
     <div className="login-box">
@@ -21,9 +25,11 @@ const LoginPage = ({
             ref={emailInputRef}
             type="email"
             defaultValue={email}
-            className="input"
+            className={`input ${emailError ? 'input-error' : ''}`}
             placeholder="seu.email@exemplo.com"
+            disabled={isLoading}
           />
+          {emailError && <span className="error-message">{emailError}</span>}
         </div>
 
         <div className="input-group">
@@ -32,9 +38,11 @@ const LoginPage = ({
             ref={passwordInputRef}
             type="password"
             defaultValue={password}
-            className="input"
+            className={`input ${passwordError ? 'input-error' : ''}`}
             placeholder="••••••••"
+            disabled={isLoading}
           />
+          {passwordError && <span className="error-message">{passwordError}</span>}
         </div>
 
         <div className="checkbox">
@@ -44,16 +52,28 @@ const LoginPage = ({
             checked={rememberMe}
             onChange={(e) => setRememberMe(e.target.checked)}
             className="checkbox-input"
+            disabled={isLoading}
           />
           <label htmlFor="remember" style={{ fontSize: '0.875rem' }}>Lembrar conta</label>
         </div>
 
-        <button onClick={handleLogin} className="login-button">
-          Log In
+        <button 
+          onClick={handleLogin} 
+          className="login-button"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <span className="button-loading">
+              <span className="spinner"></span>
+              A entrar...
+            </span>
+          ) : (
+            'Log In'
+          )}
         </button>
 
         <div className="forgot-password">
-          <button className="link">
+          <button className="link" disabled={isLoading} onClick={onForgotPassword}>
             Esqueceu-se da palavra passe?
           </button>
         </div>

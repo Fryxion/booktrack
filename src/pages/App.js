@@ -6,6 +6,8 @@ import PerfilPage from './Perfil/App';
 import ReservasPage from './Reservas/App';
 import CatalogoPage from './Catalogo/App';
 import DetalhesPage from './Detalhes/App';
+import Toast from '../components/Toast/App';
+import Modal from '../components/Modal/App';
 
 const BookTrackPrototype = () => {
   const [currentPage, setCurrentPage] = useState('login');
@@ -14,6 +16,17 @@ const BookTrackPrototype = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBook, setSelectedBook] = useState(null);
+  
+  // Estados de validação e feedback
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [toast, setToast] = useState({ message: '', type: '' });
+  const [modalState, setModalState] = useState({ isOpen: false, reservaId: null });
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [forgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false);
+  const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
+  const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
   
   // Refs to maintain focus on inputs
   const emailInputRef = useRef(null);
@@ -37,8 +50,8 @@ const BookTrackPrototype = () => {
     dataRegisto: '15/09/2025'
   };
 
-  // Temporário mock reservas ativas
-  const reservasAtivas = [
+  // Temporário mock reservas ativas (agora com estado)
+  const [reservasAtivas, setReservasAtivas] = useState([
     {
       id: 1,
       livro: 'Os Lusíadas',
@@ -53,7 +66,7 @@ const BookTrackPrototype = () => {
       dataReserva: '12/11/2025',
       dataExpiracao: '19/11/2025'
     }
-  ];
+  ]);
 
   // Temporário mock histórico de empréstimos
   const historicoEmprestimos = [
@@ -113,14 +126,46 @@ const BookTrackPrototype = () => {
   ];
 
   const handleLogin = () => {
-    // read values from refs (uncontrolled inputs) to avoid re-render on each keystroke
-    const emailVal = emailInputRef.current ? emailInputRef.current.value : email;
+    // Limpar erros anteriores
+    setEmailError('');
+    setPasswordError('');
+    
+    // Ler valores dos inputs
+    const emailVal = emailInputRef.current ? emailInputRef.current.value.trim() : email;
     const pwVal = passwordInputRef.current ? passwordInputRef.current.value : password;
-    if (emailVal && pwVal) {
+    
+    // Validação de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailVal) {
+      setEmailError('Email é obrigatório');
+      return;
+    }
+    if (!emailRegex.test(emailVal)) {
+      setEmailError('Email inválido');
+      return;
+    }
+    
+    // Validação de password
+    if (!pwVal) {
+      setPasswordError('Password é obrigatória');
+      return;
+    }
+    if (pwVal.length < 6) {
+      setPasswordError('Password deve ter pelo menos 6 caracteres');
+      return;
+    }
+    
+    // Simular loading (em produção seria chamada à API)
+    setIsLoading(true);
+    setTimeout(() => {
       setEmail(emailVal);
       setPassword(pwVal);
-      setCurrentPage('inicio');
-    }
+      setIsLoading(false);
+      setToast({ message: 'Login efetuado com sucesso!', type: 'success' });
+      setTimeout(() => {
+        setCurrentPage('inicio');
+      }, 500);
+    }, 1000);
   };
 
   const handleBookClick = (book) => {
@@ -129,16 +174,128 @@ const BookTrackPrototype = () => {
   };
 
   const handleReservar = () => {
-    alert('Reserva efetuada com sucesso! Receberá um email de confirmação.');
-    setCurrentPage('catalogo');
+    setToast({ message: 'Reserva efetuada com sucesso! Receberá um email de confirmação.', type: 'success' });
+    setTimeout(() => {
+      setCurrentPage('catalogo');
+    }, 1500);
   };
 
   const handleCancelarReserva = (id) => {
-    alert(`Reserva #${id} cancelada com sucesso!`);
+    setModalState({ isOpen: true, reservaId: id });
+  };
+
+  const confirmCancelarReserva = () => {
+    // Remover a reserva do estado
+    setReservasAtivas(reservasAtivas.filter(r => r.id !== modalState.reservaId));
+    setToast({ message: `Reserva #${modalState.reservaId} cancelada com sucesso!`, type: 'success' });
+    setModalState({ isOpen: false, reservaId: null });
+  };
+
+  const handleLogout = () => {
+    setLogoutModalOpen(true);
+  };
+
+  const confirmLogout = () => {
+    setLogoutModalOpen(false);
+    setToast({ message: 'Sessão terminada com sucesso!', type: 'success' });
+    setTimeout(() => {
+      setCurrentPage('login');
+      // Limpar dados se necessário
+      setEmail('');
+      setPassword('');
+      setSearchQuery('');
+    }, 1000);
+  };
+
+  const handleForgotPassword = () => {
+    setForgotPasswordModalOpen(true);
+  };
+
+  const handleEditProfile = () => {
+    setEditProfileModalOpen(true);
+  };
+
+  const handleChangePassword = () => {
+    setChangePasswordModalOpen(true);
   };
 
   return (
     <div>
+      <Toast 
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ message: '', type: '' })}
+      />
+      
+      {/* Modal de cancelar reserva */}
+      <Modal 
+        isOpen={modalState.isOpen}
+        title="Cancelar Reserva"
+        message={`Tem a certeza que deseja cancelar a reserva #${modalState.reservaId}? Esta ação não pode ser revertida.`}
+        onConfirm={confirmCancelarReserva}
+        onCancel={() => setModalState({ isOpen: false, reservaId: null })}
+        confirmText="Sim, cancelar"
+        cancelText="Não"
+        type="danger"
+      />
+
+      {/* Modal de logout */}
+      <Modal 
+        isOpen={logoutModalOpen}
+        title="Terminar Sessão"
+        message="Tem a certeza que deseja sair da sua conta?"
+        onConfirm={confirmLogout}
+        onCancel={() => setLogoutModalOpen(false)}
+        confirmText="Sim, sair"
+        cancelText="Cancelar"
+        type="danger"
+      />
+
+      {/* Modal de esqueceu-se da password */}
+      <Modal 
+        isOpen={forgotPasswordModalOpen}
+        title="Recuperar Password"
+        message="Insira o seu email e receberá instruções para recuperar a sua password."
+        onConfirm={() => {
+          setForgotPasswordModalOpen(false);
+          setToast({ message: 'Email de recuperação enviado!', type: 'success' });
+        }}
+        onCancel={() => setForgotPasswordModalOpen(false)}
+        confirmText="Enviar"
+        cancelText="Cancelar"
+        type="default"
+      />
+
+      {/* Modal de editar perfil */}
+      <Modal 
+        isOpen={editProfileModalOpen}
+        title="Editar Perfil"
+        message="Funcionalidade de edição de perfil em desenvolvimento. Em breve poderá alterar os seus dados pessoais."
+        onConfirm={() => {
+          setEditProfileModalOpen(false);
+          setToast({ message: 'Perfil atualizado!', type: 'success' });
+        }}
+        onCancel={() => setEditProfileModalOpen(false)}
+        confirmText="Guardar"
+        cancelText="Cancelar"
+        type="default"
+      />
+
+      {/* Modal de alterar password */}
+      <Modal 
+        isOpen={changePasswordModalOpen}
+        title="Alterar Password"
+        message="Insira a sua password atual e a nova password para alterar."
+        onConfirm={() => {
+          setChangePasswordModalOpen(false);
+          setToast({ message: 'Password alterada com sucesso!', type: 'success' });
+        }}
+        onCancel={() => setChangePasswordModalOpen(false)}
+        confirmText="Alterar"
+        cancelText="Cancelar"
+        type="default"
+      />
+      
       {currentPage === 'login' && (
         <LoginPage 
           email={email}
@@ -148,6 +305,10 @@ const BookTrackPrototype = () => {
           emailInputRef={emailInputRef}
           passwordInputRef={passwordInputRef}
           handleLogin={handleLogin}
+          emailError={emailError}
+          passwordError={passwordError}
+          isLoading={isLoading}
+          onForgotPassword={handleForgotPassword}
         />
       )}
       {currentPage === 'inicio' && (
@@ -179,6 +340,9 @@ const BookTrackPrototype = () => {
           userData={userData}
           historicoEmprestimos={historicoEmprestimos}
           setCurrentPage={setCurrentPage}
+          onEditProfile={handleEditProfile}
+          onChangePassword={handleChangePassword}
+          onLogout={handleLogout}
         />
       )}
       {currentPage === 'reservas' && (

@@ -22,12 +22,6 @@ const Header = ({ activePage, setCurrentPage }) => (
         </div>
         <nav className="nav" role="navigation" aria-label="Menu principal">
           <button 
-            onClick={() => setCurrentPage('inicio')} 
-            className={activePage === 'inicio' ? 'nav-button-active' : 'nav-button'}
-          >
-            Início
-          </button>
-          <button 
             onClick={() => setCurrentPage('catalogo')} 
             className={activePage === 'catalogo' ? 'nav-button-active' : 'nav-button'}
           >
