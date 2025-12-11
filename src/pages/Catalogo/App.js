@@ -1,36 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Header from '../../components/Header/App';
+import { livrosAPI } from '../../services/api';
 import '../../styles/App.css';
 
-const CatalogoPage = ({ 
-  books, 
-  searchQuery, 
-  setSearchQuery,
-  searchInputRef, 
-  searchDebounceRef, 
-  handleBookClick, 
-  setCurrentPage 
-}) => {
+const CatalogoPage = ({ handleBookClick, setCurrentPage }) => {
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const [categoriaFilter, setCategoriaFilter] = useState('todas');
   const [disponibilidadeFilter, setDisponibilidadeFilter] = useState('todas');
   const [ordenacao, setOrdenacao] = useState('titulo-asc');
+  const [categorias, setCategorias] = useState(['todas']);
 
-  // Extrair categorias únicas dos livros
-  const categorias = ['todas', ...new Set(books.map(book => book.categoria))];
+  const searchInputRef = useRef(null);
+  const searchDebounceRef = useRef(null);
 
-  // Filtrar livros
+  // Carregar livros ao montar o componente
+  useEffect(() => {
+    loadBooks();
+    loadCategorias();
+  }, []);
+
+  // Carregar livros da API
+  const loadBooks = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await livrosAPI.getAll();
+      
+      if (response.success) {
+        setBooks(response.data);
+      } else {
+        setError(response.message || 'Erro ao carregar livros');
+      }
+    } catch (err) {
+      console.error('Erro ao carregar livros:', err);
+      setError('Erro ao conectar ao servidor');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Carregar categorias da API
+  const loadCategorias = async () => {
+    try {
+      const response = await livrosAPI.getCategorias();
+      if (response.success && response.data) {
+        setCategorias(['todas', ...response.data]);
+      }
+    } catch (err) {
+      console.error('Erro ao carregar categorias:', err);
+    }
+  };
+
+  // Aplicar filtros e pesquisa
   let filteredBooks = books.filter(book => {
     // Filtro de pesquisa
-    const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         book.author.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = book.titulo.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         book.autor.toLowerCase().includes(searchQuery.toLowerCase());
     
     // Filtro de categoria
     const matchesCategoria = categoriaFilter === 'todas' || book.categoria === categoriaFilter;
     
     // Filtro de disponibilidade
     const matchesDisponibilidade = disponibilidadeFilter === 'todas' || 
-                                   (disponibilidadeFilter === 'disponiveis' && book.disponivel) ||
-                                   (disponibilidadeFilter === 'indisponiveis' && !book.disponivel);
+                                   (disponibilidadeFilter === 'disponiveis' && book.copias_disponiveis > 0) ||
+                                   (disponibilidadeFilter === 'indisponiveis' && book.copias_disponiveis === 0);
     
     return matchesSearch && matchesCategoria && matchesDisponibilidade;
   });
@@ -39,13 +76,13 @@ const CatalogoPage = ({
   filteredBooks = [...filteredBooks].sort((a, b) => {
     switch (ordenacao) {
       case 'titulo-asc':
-        return a.title.localeCompare(b.title);
+        return a.titulo.localeCompare(b.titulo);
       case 'titulo-desc':
-        return b.title.localeCompare(a.title);
+        return b.titulo.localeCompare(a.titulo);
       case 'ano-asc':
-        return parseInt(a.publicacao) - parseInt(b.publicacao);
+        return new Date(a.data_publicacao) - new Date(b.data_publicacao);
       case 'ano-desc':
-        return parseInt(b.publicacao) - parseInt(a.publicacao);
+        return new Date(b.data_publicacao) - new Date(a.data_publicacao);
       default:
         return 0;
     }
@@ -55,11 +92,50 @@ const CatalogoPage = ({
     setCategoriaFilter('todas');
     setDisponibilidadeFilter('todas');
     setOrdenacao('titulo-asc');
+    setSearchQuery('');
+    if (searchInputRef.current) {
+      searchInputRef.current.value = '';
+    }
   };
 
   const hasActiveFilters = categoriaFilter !== 'todas' || 
                           disponibilidadeFilter !== 'todas' || 
-                          ordenacao !== 'titulo-asc';
+                          ordenacao !== 'titulo-asc' ||
+                          searchQuery !== '';
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="catalog-container">
+        <Header activePage="catalogo" setCurrentPage={setCurrentPage} />
+        <main className="catalog-main" role="main">
+          <h1 className="catalog-title">CATÁLOGO</h1>
+          <div className="empty-state">
+            <div className="spinner"></div>
+            <p>A carregar livros...</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="catalog-container">
+        <Header activePage="catalogo" setCurrentPage={setCurrentPage} />
+        <main className="catalog-main" role="main">
+          <h1 className="catalog-title">CATÁLOGO</h1>
+          <div className="empty-state">
+            <p style={{ color: '#ef4444' }}>{error}</p>
+            <button className="primary-button" onClick={loadBooks}>
+              Tentar novamente
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="catalog-container">
@@ -88,7 +164,6 @@ const CatalogoPage = ({
           </div>
         </div>
 
-        {/* Filtros e Ordenação */}
         <div className="filters-container">
           <div className="filters-row">
             <select 
@@ -142,19 +217,22 @@ const CatalogoPage = ({
         <div className="books-list">
           {filteredBooks.map((book) => (
             <div
-              key={book.id}
+              key={book.id_livro}
               onClick={() => handleBookClick(book)}
               className="book-card"
             >
               <div className="book-cover">📚</div>
               
               <div className="book-info">
-                <h3 className="book-title">{book.title}</h3>
-                <p className="book-detail">Autor: {book.author}</p>
-                <p className="book-detail">Publicação: {book.publicacao}</p>
+                <h3 className="book-title">{book.titulo}</h3>
+                <p className="book-detail">Autor: {book.autor}</p>
+                <p className="book-detail">ISBN: {book.isbn}</p>
                 <p className="book-detail">Categoria: {book.categoria}</p>
+                <p className="book-detail">
+                  Disponíveis: {book.copias_disponiveis} de {book.total_copias}
+                </p>
                 <div>
-                  {book.disponivel ? (
+                  {book.copias_disponiveis > 0 ? (
                     <span className="badge badge-available">
                       Disponível
                     </span>
@@ -174,6 +252,11 @@ const CatalogoPage = ({
         {filteredBooks.length === 0 && (
           <div className="empty-state">
             <p>Nenhum livro encontrado.</p>
+            {hasActiveFilters && (
+              <button className="secondary-button" onClick={limparFiltros}>
+                Limpar filtros
+              </button>
+            )}
           </div>
         )}
       </main>

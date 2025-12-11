@@ -1,19 +1,69 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/App.css';
 
-const LoginPage = ({ 
-  email, 
-  password, 
-  rememberMe, 
-  setRememberMe, 
-  emailInputRef, 
-  passwordInputRef, 
-  handleLogin,
-  emailError,
-  passwordError,
-  isLoading,
-  onForgotPassword
-}) => {
+const LoginPage = ({ onLoginSuccess, onForgotPassword }) => {
+  const { login } = useAuth();
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  
+  const emailInputRef = useRef(null);
+  const passwordInputRef = useRef(null);
+
+  const handleLogin = async () => {
+    // Limpar erros anteriores
+    setEmailError('');
+    setPasswordError('');
+    
+    // Ler valores dos inputs
+    const emailVal = emailInputRef.current ? emailInputRef.current.value.trim() : '';
+    const pwVal = passwordInputRef.current ? passwordInputRef.current.value : '';
+    
+    // Validação de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailVal) {
+      setEmailError('Email é obrigatório');
+      return;
+    }
+    if (!emailRegex.test(emailVal)) {
+      setEmailError('Email inválido');
+      return;
+    }
+    
+    // Validação de password
+    if (!pwVal) {
+      setPasswordError('Password é obrigatória');
+      return;
+    }
+    if (pwVal.length < 6) {
+      setPasswordError('Password deve ter pelo menos 6 caracteres');
+      return;
+    }
+    
+    // Fazer login através da API
+    setIsLoading(true);
+    
+    try {
+      const result = await login(emailVal, pwVal);
+      
+      if (result.success) {
+        // Sucesso - o AuthContext já guardou o token
+        if (onLoginSuccess) {
+          onLoginSuccess(result.data);
+        }
+      } else {
+        // Erro - mostrar mensagem
+        setPasswordError(result.message || 'Credenciais inválidas');
+      }
+    } catch (error) {
+      setPasswordError('Erro ao conectar ao servidor');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !isLoading) {
       handleLogin();
@@ -31,7 +81,6 @@ const LoginPage = ({
             <input
               ref={emailInputRef}
               type="email"
-              defaultValue={email}
               className={`input ${emailError ? 'input-error' : ''}`}
               placeholder="seu.email@exemplo.com"
               disabled={isLoading}
@@ -45,7 +94,6 @@ const LoginPage = ({
             <input
               ref={passwordInputRef}
               type="password"
-              defaultValue={password}
               className={`input ${passwordError ? 'input-error' : ''}`}
               placeholder="••••••••"
               disabled={isLoading}
@@ -54,41 +102,45 @@ const LoginPage = ({
             {passwordError && <span className="error-message">{passwordError}</span>}
           </div>
 
-        <div className="checkbox">
-          <input
-            type="checkbox"
-            id="remember"
-            checked={rememberMe}
-            onChange={(e) => setRememberMe(e.target.checked)}
-            className="checkbox-input"
+          <div className="checkbox">
+            <input
+              type="checkbox"
+              id="remember"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="checkbox-input"
+              disabled={isLoading}
+            />
+            <label htmlFor="remember" style={{ fontSize: '0.875rem' }}>Lembrar conta</label>
+          </div>
+
+          <button 
+            onClick={handleLogin} 
+            className="login-button"
             disabled={isLoading}
-          />
-          <label htmlFor="remember" style={{ fontSize: '0.875rem' }}>Lembrar conta</label>
-        </div>
-
-        <button 
-          onClick={handleLogin} 
-          className="login-button"
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <span className="button-loading">
-              <span className="spinner"></span>
-              A entrar...
-            </span>
-          ) : (
-            'Log In'
-          )}
-        </button>
-
-        <div className="forgot-password">
-          <button className="link" disabled={isLoading} onClick={onForgotPassword}>
-            Esqueceu-se da palavra passe?
+          >
+            {isLoading ? (
+              <span className="button-loading">
+                <span className="spinner"></span>
+                A entrar...
+              </span>
+            ) : (
+              'Log In'
+            )}
           </button>
+
+          <div className="forgot-password">
+            <button 
+              className="link" 
+              disabled={isLoading} 
+              onClick={onForgotPassword}
+            >
+              Esqueceu-se da palavra passe?
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  </main>
+    </main>
   );
 };
 

@@ -13,18 +13,25 @@ const SobrePage = ({ setCurrentPage }) => (
         <div className="about-section">
           <div className="about-image">🏫</div>
           <div className="about-content">
-            <textarea 
-              className="textarea"
-              placeholder="Lorem ipsum..."
-              value="O BookTrack é um sistema de gestão de biblioteca escolar desenvolvido para tornar o acesso aos livros mais fácil e eficiente. Nossa missão é promover a leitura e facilitar o processo de empréstimo de livros para toda a comunidade escolar."
-              readOnly
-            />
+            <h2 style={{ fontSize: '1.875rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+              Nossa Missão
+            </h2>
+            <p style={{ color: '#6b7280', lineHeight: 1.7, marginBottom: '1rem' }}>
+              O BookTrack é um sistema de gestão de biblioteca escolar desenvolvido para tornar o acesso aos livros mais fácil e eficiente.
+            </p>
+            <p style={{ color: '#6b7280', lineHeight: 1.7 }}>
+              Nossa missão é promover a leitura e facilitar a descoberta de novas obras para toda a comunidade escolar, 
+              proporcionando uma experiência simples e intuitiva de consulta ao catálogo.
+            </p>
           </div>
         </div>
 
         <div className="map-section">
           <h2 className="section-title">Onde estamos localizados</h2>
           <div className="map-placeholder">🗺️</div>
+          <p style={{ marginTop: '1rem', color: '#6b7280' }}>
+            Biblioteca Escolar - Rua Exemplo, 123 - Porto, Portugal
+          </p>
         </div>
       </div>
     </main>

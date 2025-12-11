@@ -1,7 +1,16 @@
 import React from 'react';
 import '../../styles/App.css';
 
-const Modal = ({ isOpen, title, message, onConfirm, onCancel, confirmText = 'Confirmar', cancelText = 'Cancelar', type = 'default' }) => {
+const Modal = ({ 
+  isOpen, 
+  title, 
+  message, 
+  onConfirm, 
+  onCancel, 
+  confirmText = 'Confirmar', 
+  cancelText = 'Cancelar', 
+  type = 'default' 
+}) => {
   if (!isOpen) return null;
 
   return (

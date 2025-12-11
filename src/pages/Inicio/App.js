@@ -8,27 +8,25 @@ const InicioPage = ({ setCurrentPage }) => (
     
     <main className="catalog-main" role="main">
       <div className="hero-section">
-        <h1 className="hero-title">BEM VINDO À LIVRARIA</h1>
+        <h1 className="hero-title">BEM-VINDO À BIBLIOTECA</h1>
         <div className="hero-description">
-          <textarea 
-            className="textarea"
-            placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Descubra nossa coleção de livros e reserve os seus favoritos de forma simples e rápida."
-            readOnly
-            value="Explore o nosso vasto catálogo de livros, faça reservas online e acompanhe o seu histórico de leituras. O BookTrack torna a gestão da biblioteca escolar mais fácil e acessível para todos."
-          />
+          <p style={{ color: '#6b7280', lineHeight: 1.6 }}>
+            Explore o nosso vasto catálogo de livros, faça reservas online e acompanhe o seu histórico de leituras. 
+            O BookTrack torna a gestão da biblioteca escolar mais fácil e acessível para todos.
+          </p>
         </div>
         <div className="hero-buttons">
           <button 
             onClick={() => setCurrentPage('catalogo')} 
             className="primary-button"
           >
-            Pesquisar
+            Explorar Catálogo
           </button>
           <button 
             onClick={() => setCurrentPage('perfil')} 
             className="secondary-button"
           >
-            Reservar
+            Meu Perfil
           </button>
         </div>
       </div>
