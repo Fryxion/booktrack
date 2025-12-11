@@ -13,37 +13,46 @@ const LoginPage = ({
   passwordError,
   isLoading,
   onForgotPassword
-}) => (
-  <main className="login-container">
-    <div className="login-box">
-      <h1 className="login-title">LOGIN</h1>
-      
-      <div>
-        <div className="input-group">
-          <label className="label">Email</label>
-          <input
-            ref={emailInputRef}
-            type="email"
-            defaultValue={email}
-            className={`input ${emailError ? 'input-error' : ''}`}
-            placeholder="seu.email@exemplo.com"
-            disabled={isLoading}
-          />
-          {emailError && <span className="error-message">{emailError}</span>}
-        </div>
+}) => {
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !isLoading) {
+      handleLogin();
+    }
+  };
 
-        <div className="input-group">
-          <label className="label">Password</label>
-          <input
-            ref={passwordInputRef}
-            type="password"
-            defaultValue={password}
-            className={`input ${passwordError ? 'input-error' : ''}`}
-            placeholder="••••••••"
-            disabled={isLoading}
-          />
-          {passwordError && <span className="error-message">{passwordError}</span>}
-        </div>
+  return (
+    <main className="login-container">
+      <div className="login-box">
+        <h1 className="login-title">LOGIN</h1>
+        
+        <div>
+          <div className="input-group">
+            <label className="label">Email</label>
+            <input
+              ref={emailInputRef}
+              type="email"
+              defaultValue={email}
+              className={`input ${emailError ? 'input-error' : ''}`}
+              placeholder="seu.email@exemplo.com"
+              disabled={isLoading}
+              onKeyPress={handleKeyPress}
+            />
+            {emailError && <span className="error-message">{emailError}</span>}
+          </div>
+
+          <div className="input-group">
+            <label className="label">Password</label>
+            <input
+              ref={passwordInputRef}
+              type="password"
+              defaultValue={password}
+              className={`input ${passwordError ? 'input-error' : ''}`}
+              placeholder="••••••••"
+              disabled={isLoading}
+              onKeyPress={handleKeyPress}
+            />
+            {passwordError && <span className="error-message">{passwordError}</span>}
+          </div>
 
         <div className="checkbox">
           <input
@@ -80,6 +89,7 @@ const LoginPage = ({
       </div>
     </div>
   </main>
-);
+  );
+};
 
 export default LoginPage;

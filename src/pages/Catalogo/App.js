@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../../components/Header/App';
 import '../../styles/App.css';
 
@@ -11,10 +11,55 @@ const CatalogoPage = ({
   handleBookClick, 
   setCurrentPage 
 }) => {
-  const filteredBooks = books.filter(book =>
-    book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    book.author.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const [categoriaFilter, setCategoriaFilter] = useState('todas');
+  const [disponibilidadeFilter, setDisponibilidadeFilter] = useState('todas');
+  const [ordenacao, setOrdenacao] = useState('titulo-asc');
+
+  // Extrair categorias únicas dos livros
+  const categorias = ['todas', ...new Set(books.map(book => book.categoria))];
+
+  // Filtrar livros
+  let filteredBooks = books.filter(book => {
+    // Filtro de pesquisa
+    const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         book.author.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    // Filtro de categoria
+    const matchesCategoria = categoriaFilter === 'todas' || book.categoria === categoriaFilter;
+    
+    // Filtro de disponibilidade
+    const matchesDisponibilidade = disponibilidadeFilter === 'todas' || 
+                                   (disponibilidadeFilter === 'disponiveis' && book.disponivel) ||
+                                   (disponibilidadeFilter === 'indisponiveis' && !book.disponivel);
+    
+    return matchesSearch && matchesCategoria && matchesDisponibilidade;
+  });
+
+  // Ordenar livros
+  filteredBooks = [...filteredBooks].sort((a, b) => {
+    switch (ordenacao) {
+      case 'titulo-asc':
+        return a.title.localeCompare(b.title);
+      case 'titulo-desc':
+        return b.title.localeCompare(a.title);
+      case 'ano-asc':
+        return parseInt(a.publicacao) - parseInt(b.publicacao);
+      case 'ano-desc':
+        return parseInt(b.publicacao) - parseInt(a.publicacao);
+      default:
+        return 0;
+    }
+  });
+
+  const limparFiltros = () => {
+    setCategoriaFilter('todas');
+    setDisponibilidadeFilter('todas');
+    setOrdenacao('titulo-asc');
+  };
+
+  const hasActiveFilters = categoriaFilter !== 'todas' || 
+                          disponibilidadeFilter !== 'todas' || 
+                          ordenacao !== 'titulo-asc';
 
   return (
     <div className="catalog-container">
@@ -40,6 +85,57 @@ const CatalogoPage = ({
               placeholder="Pesquisar por título ou autor..."
               className="search-input"
             />
+          </div>
+        </div>
+
+        {/* Filtros e Ordenação */}
+        <div className="filters-container">
+          <div className="filters-row">
+            <select 
+              className="filter-select"
+              value={categoriaFilter}
+              onChange={(e) => setCategoriaFilter(e.target.value)}
+            >
+              {categorias.map(cat => (
+                <option key={cat} value={cat}>
+                  {cat === 'todas' ? 'Todas as categorias' : cat}
+                </option>
+              ))}
+            </select>
+
+            <select 
+              className="filter-select"
+              value={disponibilidadeFilter}
+              onChange={(e) => setDisponibilidadeFilter(e.target.value)}
+            >
+              <option value="todas">Todas disponibilidades</option>
+              <option value="disponiveis">Apenas disponíveis</option>
+              <option value="indisponiveis">Apenas indisponíveis</option>
+            </select>
+
+            <select 
+              className="filter-select"
+              value={ordenacao}
+              onChange={(e) => setOrdenacao(e.target.value)}
+            >
+              <option value="titulo-asc">Título (A-Z)</option>
+              <option value="titulo-desc">Título (Z-A)</option>
+              <option value="ano-asc">Mais antigos</option>
+              <option value="ano-desc">Mais recentes</option>
+            </select>
+
+            {hasActiveFilters && (
+              <button 
+                className="clear-filters-btn"
+                onClick={limparFiltros}
+              >
+                Limpar filtros
+              </button>
+            )}
+          </div>
+
+          <div className="results-count">
+            {filteredBooks.length} {filteredBooks.length === 1 ? 'livro encontrado' : 'livros encontrados'}
           </div>
         </div>
 

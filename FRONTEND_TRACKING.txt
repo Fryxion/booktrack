@@ -73,23 +73,26 @@ Tempo real: ~2 horas ✅
 
 FASE 2: FILTROS E ORDENAÇÃO (Funcionalidade pedida)
 ────────────────────────────────────────────────────
-[ ] 2.1 Filtros no Catálogo
-    [ ] Dropdown de categorias
-    [ ] Filtro por disponibilidade (toggle/checkbox)
-    [ ] Limpar filtros (botão reset)
+[X] 2.1 Filtros no Catálogo ✅ COMPLETO - 11/12/2025
+    [X] Dropdown de categorias
+    [X] Filtro por disponibilidade (toggle/checkbox)
+    [X] Limpar filtros (botão reset)
     
-[ ] 2.2 Ordenação
-    [ ] Ordenar A-Z (título)
-    [ ] Ordenar Z-A (título)
-    [ ] Mais recentes (ano publicação)
-    [ ] Mais antigos (ano publicação)
+[X] 2.2 Ordenação ✅ COMPLETO - 11/12/2025
+    [X] Ordenar A-Z (título)
+    [X] Ordenar Z-A (título)
+    [X] Mais recentes (ano publicação)
+    [X] Mais antigos (ano publicação)
     
-[ ] 2.3 UI dos Filtros
-    [ ] Sidebar ou top bar com filtros
-    [ ] Contador de resultados
-    [ ] Design limpo e intuitivo
+[X] 2.3 UI dos Filtros ✅ COMPLETO - 11/12/2025
+    [X] Barra horizontal com filtros (3 dropdowns)
+    [X] Contador de resultados
+    [X] Design limpo e intuitivo
+    [X] Botão "Limpar filtros" aparece quando há filtros ativos
 
 Tempo estimado: 2-3 horas
+Tempo real: ~30 minutos ✅
+Testado e funcional: 11/12/2025 ✅
 
 
 FASE 3: RESPONSIVIDADE MOBILE (Importante para utilização real)
