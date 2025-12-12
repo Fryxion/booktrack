@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/App.css';
 
-const LoginPage = ({ onLoginSuccess, onForgotPassword }) => {
+const LoginPage = ({ onLoginSuccess, onRegister }) => {
   const { login } = useAuth();
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -102,45 +102,46 @@ const LoginPage = ({ onLoginSuccess, onForgotPassword }) => {
             {passwordError && <span className="error-message">{passwordError}</span>}
           </div>
 
-          <div className="checkbox">
-            <input
-              type="checkbox"
-              id="remember"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-              className="checkbox-input"
-              disabled={isLoading}
-            />
-            <label htmlFor="remember" style={{ fontSize: '0.875rem' }}>Lembrar conta</label>
-          </div>
-
-          <button 
-            onClick={handleLogin} 
-            className="login-button"
+        <div className="checkbox">
+          <input
+            type="checkbox"
+            id="remember"
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+            className="checkbox-input"
             disabled={isLoading}
-          >
-            {isLoading ? (
-              <span className="button-loading">
-                <span className="spinner"></span>
-                A entrar...
-              </span>
-            ) : (
-              'Log In'
-            )}
-          </button>
+          />
+          <label htmlFor="remember" style={{ fontSize: '0.875rem' }}>Lembrar conta</label>
+        </div>
 
-          <div className="forgot-password">
-            <button 
-              className="link" 
-              disabled={isLoading} 
-              onClick={onForgotPassword}
-            >
-              Esqueceu-se da palavra passe?
-            </button>
-          </div>
+        <button 
+          onClick={handleLogin} 
+          className="login-button"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <span className="button-loading">
+              <span className="spinner"></span>
+              A entrar...
+            </span>
+          ) : (
+            'Log In'
+          )}
+        </button>
+
+        <div className="register-prompt">
+          <span>Não tem conta? </span>
+          <button 
+            className="link" 
+            disabled={isLoading} 
+            onClick={onRegister}
+          >
+            Registar
+          </button>
         </div>
       </div>
-    </main>
+    </div>
+  </main>
   );
 };
 

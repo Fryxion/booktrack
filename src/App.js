@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import LoginPage from './pages/Login/App';
+import RegistarPage from './pages/Registar/App';
 import InicioPage from './pages/Inicio/App';
 import SobrePage from './pages/Sobre/App';
 import PerfilPage from './pages/Perfil/App';
@@ -33,14 +34,14 @@ const AppContent = () => {
 
   // Redirecionar para início após login
   useEffect(() => {
-    if (isAuthenticated && currentPage === 'login') {
+    if (isAuthenticated && (currentPage === 'login' || currentPage === 'registar')) {
       setCurrentPage('inicio');
     }
   }, [isAuthenticated, currentPage]);
 
   // Redirecionar para login se não autenticado
   useEffect(() => {
-    if (!isAuthenticated && currentPage !== 'login') {
+    if (!isAuthenticated && currentPage !== 'login' && currentPage !== 'registar') {
       setCurrentPage('login');
     }
   }, [isAuthenticated, currentPage]);
@@ -84,6 +85,21 @@ const AppContent = () => {
     setTimeout(() => {
       setCurrentPage('inicio');
     }, 500);
+  };
+
+  const handleRegisterSuccess = (data) => {
+    showToast('Conta criada com sucesso! Faça login para continuar.', 'success');
+    setTimeout(() => {
+      setCurrentPage('login');
+    }, 1500);
+  };
+
+  const handleGoToRegister = () => {
+    setCurrentPage('registar');
+  };
+
+  const handleBackToLogin = () => {
+    setCurrentPage('login');
   };
 
   return (
@@ -153,10 +169,17 @@ const AppContent = () => {
       
       {/* Páginas */}
       {!isAuthenticated ? (
-        <LoginPage 
-          onLoginSuccess={handleLoginSuccess}
-          onForgotPassword={handleForgotPassword}
-        />
+        currentPage === 'registar' ? (
+          <RegistarPage 
+            onRegisterSuccess={handleRegisterSuccess}
+            onBackToLogin={handleBackToLogin}
+          />
+        ) : (
+          <LoginPage 
+            onLoginSuccess={handleLoginSuccess}
+            onRegister={handleGoToRegister}
+          />
+        )
       ) : (
         <>
           {currentPage === 'inicio' && (
