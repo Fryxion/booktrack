@@ -46,6 +46,7 @@ const Header = ({ activePage, setCurrentPage }) => {
             <button 
               onClick={() => setCurrentPage('admin')} 
               className={activePage === 'admin' ? 'nav-button-active' : 'nav-button'}
+              style={user.tipo === 'bibliotecario' ? {display:'flex'} : {display:'none'}}
             >
               ⚙️ Admin
             </button>

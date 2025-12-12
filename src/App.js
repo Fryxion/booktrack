@@ -14,7 +14,7 @@ import Modal from './components/Modal/App';
 import './styles/App.css';
 
 const AppContent = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, isBibliotecario } = useAuth();
   const [currentPage, setCurrentPage] = useState('login');
   const [selectedBook, setSelectedBook] = useState(null);
   
@@ -216,7 +216,7 @@ const AppContent = () => {
               showToast={showToast}
             />
           )}
-          {currentPage === 'admin' && (
+          {isBibliotecario && currentPage === 'admin' && (
             <AdminPage setCurrentPage={setCurrentPage} />
           )}
         </>

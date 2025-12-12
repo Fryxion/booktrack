@@ -362,12 +362,12 @@ const AdminPage = ({ setCurrentPage }) => {
                   />
                 </div>
                 <div className="input-group">
-                  <label className="label">Ano de Publicação *</label>
+                  <label className="label">Data de Publicação *</label>
                   <input
                     className="input"
-                    type="number"
-                    value={formData.ano_publicacao || ''}
-                    onChange={(e) => setFormData({...formData, ano_publicacao: e.target.value})}
+                    type="date"
+                    value={formData.data_publicacao || ''}
+                    onChange={(e) => setFormData({...formData, data_publicacao: e.target.value})}
                     required
                   />
                 </div>
