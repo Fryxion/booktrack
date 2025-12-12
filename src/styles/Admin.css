@@ -93,3 +93,83 @@
 .admin-btn-delete:hover {
   background-color: #dc2626;
 }
+
+/* Select para alterar tipo de utilizador */
+.admin-select-tipo {
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: white;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  font-weight: 500;
+}
+
+.admin-select-tipo:hover {
+  border-color: #2563eb;
+}
+
+.admin-select-tipo:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* ===== FIX PARA MODAL COM SCROLL VISÍVEL ===== */
+.modal-overlay {
+  padding: 1rem !important;
+  overflow-y: auto !important;
+}
+
+.modal-content {
+  max-width: 600px !important;
+  max-height: calc(100vh - 2rem) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin: auto !important;
+}
+
+.modal-header {
+  flex-shrink: 0 !important;
+  background-color: white !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1 !important;
+}
+
+.modal-body {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  flex: 1 !important;
+  max-height: calc(100vh - 200px) !important;
+  padding-right: 1rem !important;
+}
+
+/* Estilizar scrollbar */
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.modal-footer {
+  flex-shrink: 0 !important;
+  background-color: white !important;
+  position: sticky !important;
+  bottom: 0 !important;
+  z-index: 1 !important;
+}

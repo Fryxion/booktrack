@@ -121,10 +121,16 @@ const PerfilPage = ({ setCurrentPage, onEditProfile, onChangePassword, onLogout 
                       {emp.titulo || 'Título não disponível'}
                     </h4>
                     <p className="book-detail">Autor: {emp.autor || 'N/A'}</p>
-                    <p className="book-detail">ISBN: {emp.isbn}</p>
+                    <p className="book-detail">ISBN: {emp.isbn_livro}</p>
                     <p className="book-detail">Empréstimo: {formatDate(emp.data_emprestimo)}</p>
                     <p className="book-detail">
-                      Devolução: {formatDate(emp.data_devolucao_prevista)}
+                      Devolução Prevista: {formatDate(emp.data_devolucao_prevista)}
+                    </p>
+                    <p className="book-detail">
+                      Devolução Efetiva: {emp.data_devolucao_efetiva ? formatDate(emp.data_devolucao_efetiva) : '-'}
+                    </p>
+                    <p className="book-detail">
+                      Multa: {emp.multa}€
                     </p>
                     <div style={{ marginTop: '0.5rem' }}>
                       {emp.estado === 'ativo' && (
