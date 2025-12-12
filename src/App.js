@@ -5,12 +5,14 @@ import RegistarPage from './pages/Registar/App';
 import InicioPage from './pages/Inicio/App';
 import SobrePage from './pages/Sobre/App';
 import PerfilPage from './pages/Perfil/App';
+import EditarPerfilPage from './pages/EditarPerfil/App';
 import ReservasPage from './pages/Reservas/App';
 import CatalogoPage from './pages/Catalogo/App';
 import DetalhesPage from './pages/Detalhes/App';
 import AdminPage from './pages/Admin/App';
 import Toast from './components/Toast/App';
 import Modal from './components/Modal/App';
+import ChangePasswordModal from './components/ChangePasswordModal/App';
 import './styles/App.css';
 
 const AppContent = () => {
@@ -22,7 +24,6 @@ const AppContent = () => {
   const [toast, setToast] = useState({ message: '', type: '' });
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const [forgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false);
-  const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
   const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
   
   // Adicionar font do Google Fonts
@@ -74,7 +75,7 @@ const AppContent = () => {
   };
 
   const handleEditProfile = () => {
-    setEditProfileModalOpen(true);
+    setCurrentPage('editarperfil');
   };
 
   const handleChangePassword = () => {
@@ -138,34 +139,11 @@ const AppContent = () => {
         type="default"
       />
 
-      {/* Modal de editar perfil */}
-      <Modal 
-        isOpen={editProfileModalOpen}
-        title="Editar Perfil"
-        message="Funcionalidade de edição de perfil em desenvolvimento. Em breve poderá alterar os seus dados pessoais."
-        onConfirm={() => {
-          setEditProfileModalOpen(false);
-          showToast('Funcionalidade em desenvolvimento', 'info');
-        }}
-        onCancel={() => setEditProfileModalOpen(false)}
-        confirmText="OK"
-        cancelText="Fechar"
-        type="default"
-      />
-
       {/* Modal de alterar password */}
-      <Modal 
+      <ChangePasswordModal 
         isOpen={changePasswordModalOpen}
-        title="Alterar Password"
-        message="Para alterar a sua password, contacte o bibliotecário."
-        onConfirm={() => {
-          setChangePasswordModalOpen(false);
-          showToast('Contacte o bibliotecário para alterar a password', 'info');
-        }}
-        onCancel={() => setChangePasswordModalOpen(false)}
-        confirmText="OK"
-        cancelText="Fechar"
-        type="default"
+        onClose={() => setChangePasswordModalOpen(false)}
+        showToast={showToast}
       />
       
       {/* Páginas */}
@@ -208,6 +186,13 @@ const AppContent = () => {
               onEditProfile={handleEditProfile}
               onChangePassword={handleChangePassword}
               onLogout={handleLogout}
+            />
+          )}
+          {currentPage === 'editarperfil' && (
+            <EditarPerfilPage 
+              setCurrentPage={setCurrentPage}
+              showToast={showToast}
+              onLogout={logout}
             />
           )}
           {currentPage === 'reservas' && (

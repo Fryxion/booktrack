@@ -7,7 +7,6 @@ const LoginPage = ({ onLoginSuccess, onRegister }) => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
@@ -101,18 +100,6 @@ const LoginPage = ({ onLoginSuccess, onRegister }) => {
             />
             {passwordError && <span className="error-message">{passwordError}</span>}
           </div>
-
-        <div className="checkbox">
-          <input
-            type="checkbox"
-            id="remember"
-            checked={rememberMe}
-            onChange={(e) => setRememberMe(e.target.checked)}
-            className="checkbox-input"
-            disabled={isLoading}
-          />
-          <label htmlFor="remember" style={{ fontSize: '0.875rem' }}>Lembrar conta</label>
-        </div>
 
         <button 
           onClick={handleLogin} 

@@ -57,9 +57,10 @@ const CatalogoPage = ({ handleBookClick, setCurrentPage }) => {
 
   // Aplicar filtros e pesquisa
   let filteredBooks = books.filter(book => {
-    // Filtro de pesquisa
+    // Filtro de pesquisa (título, autor ou ISBN)
     const matchesSearch = book.titulo.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         book.autor.toLowerCase().includes(searchQuery.toLowerCase());
+                         book.autor.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         book.isbn.toLowerCase().includes(searchQuery.toLowerCase());
     
     // Filtro de categoria
     const matchesCategoria = categoriaFilter === 'todas' || book.categoria === categoriaFilter;
