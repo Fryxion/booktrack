@@ -1,42 +1,37 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/App.css';
 
 const LoginPage = ({ onLoginSuccess, onRegister }) => {
   const { login } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
-  const emailInputRef = useRef(null);
-  const passwordInputRef = useRef(null);
 
   const handleLogin = async () => {
     // Limpar erros anteriores
     setEmailError('');
     setPasswordError('');
     
-    // Ler valores dos inputs
-    const emailVal = emailInputRef.current ? emailInputRef.current.value.trim() : '';
-    const pwVal = passwordInputRef.current ? passwordInputRef.current.value : '';
-    
     // Validação de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailVal) {
+    if (!email.trim()) {
       setEmailError('Email é obrigatório');
       return;
     }
-    if (!emailRegex.test(emailVal)) {
+    if (!emailRegex.test(email)) {
       setEmailError('Email inválido');
       return;
     }
     
     // Validação de password
-    if (!pwVal) {
+    if (!password) {
       setPasswordError('Password é obrigatória');
       return;
     }
-    if (pwVal.length < 6) {
+    if (password.length < 6) {
       setPasswordError('Password deve ter pelo menos 6 caracteres');
       return;
     }
@@ -45,18 +40,19 @@ const LoginPage = ({ onLoginSuccess, onRegister }) => {
     setIsLoading(true);
     
     try {
-      const result = await login(emailVal, pwVal);
+      const result = await login(email, password);
       
       if (result.success) {
-        // Sucesso - o AuthContext já guardou o token
+        // Sucesso - o AuthContext já guardou o token e mudou isAuthenticated
         if (onLoginSuccess) {
           onLoginSuccess(result.data);
         }
       } else {
-        // Erro - mostrar mensagem
-        setPasswordError(result.message || 'Credenciais inválidas');
+        // Erro - mostrar mensagem e NÃO redirecionar
+        setPasswordError(result.message || 'Email ou password incorretos');
       }
     } catch (error) {
+      console.error('Erro no login:', error);
       setPasswordError('Erro ao conectar ao servidor');
     } finally {
       setIsLoading(false);
@@ -78,8 +74,9 @@ const LoginPage = ({ onLoginSuccess, onRegister }) => {
           <div className="input-group">
             <label className="label">Email</label>
             <input
-              ref={emailInputRef}
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className={`input ${emailError ? 'input-error' : ''}`}
               placeholder="seu.email@exemplo.com"
               disabled={isLoading}
@@ -91,8 +88,9 @@ const LoginPage = ({ onLoginSuccess, onRegister }) => {
           <div className="input-group">
             <label className="label">Password</label>
             <input
-              ref={passwordInputRef}
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className={`input ${passwordError ? 'input-error' : ''}`}
               placeholder="••••••••"
               disabled={isLoading}

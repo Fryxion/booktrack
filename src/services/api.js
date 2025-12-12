@@ -30,10 +30,15 @@ api.interceptors.response.use(
   },
   (error) => {
     // Se token expirado ou inválido, fazer logout
+    // MAS não fazer isso em rotas de login/register (seria logout de algo que não está logado)
     if (error.response && error.response.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/';
+      const url = error.config?.url || '';
+      // Não fazer logout se for tentativa de login ou registo
+      if (!url.includes('/auth/login') && !url.includes('/auth/register')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/';
+      }
     }
     return Promise.reject(error);
   }
@@ -75,8 +80,10 @@ export const authAPI = {
   },
 
   // Eliminar conta
-  deleteAccount: async () => {
-    const response = await api.delete('/auth/delete-account');
+  deleteAccount: async (password) => {
+    const response = await api.delete('/auth/delete-account', {
+      data: { password }
+    });
     return response.data;
   },
 };

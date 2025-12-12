@@ -72,10 +72,10 @@ export const AuthProvider = ({ children }) => {
         return { success: true, data: response.data };
       }
       
-      return { success: false, message: response.message };
+      return { success: false, message: response.message || 'Credenciais inválidas' };
     } catch (error) {
       console.error('Erro no login:', error);
-      const message = error.response?.data?.message || 'Erro ao fazer login';
+      const message = error.response?.data?.message || 'Email ou password incorretos';
       return { success: false, message };
     }
   };

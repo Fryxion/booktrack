@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import Header from '../../components/Header/App';
 import { useAuth } from '../../contexts/AuthContext';
 import { authAPI } from '../../services/api';
-import Modal from '../../components/Modal/App';
-import './App.css';
+import '../../styles/App.css';
 
 const EditarPerfilPage = ({ setCurrentPage, showToast, onLogout }) => {
-  const { user, login } = useAuth();
+  const { user, updateUser } = useAuth();
   
   // Estados do formulário
   const [nome, setNome] = useState('');
@@ -15,6 +15,8 @@ const EditarPerfilPage = ({ setCurrentPage, showToast, onLogout }) => {
   // Estados de controle
   const [isLoading, setIsLoading] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [deletePasswordError, setDeletePasswordError] = useState('');
   const [errors, setErrors] = useState({});
 
   // Carregar dados do utilizador
@@ -62,10 +64,12 @@ const EditarPerfilPage = ({ setCurrentPage, showToast, onLogout }) => {
       });
 
       if (response.success) {
-        // Atualizar contexto de autenticação
-        const updatedUser = { ...user, nome: nome.trim(), email: email.trim() };
-        localStorage.setItem('user', JSON.stringify(updatedUser));
-        login(response.token, updatedUser);
+        // Atualizar contexto de autenticação com dados retornados pelo backend
+        const updatedUser = response.data.user;
+        const newToken = response.data.token;
+        
+        localStorage.setItem('token', newToken);
+        updateUser(updatedUser);
 
         showToast('Perfil atualizado com sucesso!', 'success');
         setTimeout(() => {
@@ -91,23 +95,39 @@ const EditarPerfilPage = ({ setCurrentPage, showToast, onLogout }) => {
 
   // Eliminar conta
   const handleDeleteAccount = async () => {
+    // Validar password
+    if (!confirmPassword.trim()) {
+      setDeletePasswordError('Password é obrigatória');
+      return;
+    }
+
     try {
       setIsLoading(true);
-      const response = await authAPI.deleteAccount();
+      setDeletePasswordError('');
+      
+      const response = await authAPI.deleteAccount(confirmPassword);
 
       if (response.success) {
         showToast('Conta eliminada com sucesso', 'success');
         setDeleteModalOpen(false);
+        setConfirmPassword('');
         setTimeout(() => {
           onLogout();
           setCurrentPage('login');
         }, 1000);
       } else {
-        showToast(response.message || 'Erro ao eliminar conta', 'error');
+        setDeletePasswordError(response.message || 'Erro ao eliminar conta');
       }
     } catch (error) {
       console.error('Erro ao eliminar conta:', error);
-      showToast('Erro ao eliminar conta. Tente novamente.', 'error');
+      
+      if (error.response?.data?.message) {
+        setDeletePasswordError(error.response.data.message);
+      } else if (error.response?.status === 401) {
+        setDeletePasswordError('Password incorreta');
+      } else {
+        setDeletePasswordError('Erro ao eliminar conta. Tente novamente.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -116,6 +136,13 @@ const EditarPerfilPage = ({ setCurrentPage, showToast, onLogout }) => {
   // Cancelar e voltar
   const handleCancel = () => {
     setCurrentPage('perfil');
+  };
+
+  // Fechar modal de eliminação
+  const handleCloseDeleteModal = () => {
+    setDeleteModalOpen(false);
+    setConfirmPassword('');
+    setDeletePasswordError('');
   };
 
   // Formatar tipo de utilizador
@@ -133,17 +160,16 @@ const EditarPerfilPage = ({ setCurrentPage, showToast, onLogout }) => {
   }
 
   return (
-    <div className="editar-perfil-container">
-      <div className="editar-perfil-header">
-        <button className="btn-back" onClick={handleCancel}>
-          ← Voltar
-        </button>
-        <h1 className="editar-perfil-title">EDITAR PERFIL</h1>
-      </div>
-
-      <div className="editar-perfil-content">
-        <div className="editar-perfil-card">
-          <div className="profile-icon-large">👤</div>
+    <div className="catalog-container">
+      <Header activePage="perfil" setCurrentPage={setCurrentPage} />
+      
+      <main className="catalog-main" role="main">
+        <h1 className="catalog-title">EDITAR PERFIL</h1>
+        
+        <div className="details-box">
+          <div className="profile-header">
+            <div className="profile-icon">👤</div>
+          </div>
           
           <div className="editar-perfil-form">
             {/* Campo Nome */}
@@ -154,7 +180,7 @@ const EditarPerfilPage = ({ setCurrentPage, showToast, onLogout }) => {
                 id="nome"
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
-                className={errors.nome ? 'error' : ''}
+                className={errors.nome ? 'input input-error' : 'input'}
                 disabled={isLoading}
                 placeholder="Digite seu nome completo"
               />
@@ -169,7 +195,7 @@ const EditarPerfilPage = ({ setCurrentPage, showToast, onLogout }) => {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={errors.email ? 'error' : ''}
+                className={errors.email ? 'input input-error' : 'input'}
                 disabled={isLoading}
                 placeholder="Digite seu email"
               />
@@ -188,18 +214,20 @@ const EditarPerfilPage = ({ setCurrentPage, showToast, onLogout }) => {
             </div>
 
             {/* Botões de ação */}
-            <div className="form-actions">
+            <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
               <button 
-                className="btn-cancel" 
+                className="profile-button" 
                 onClick={handleCancel}
                 disabled={isLoading}
+                style={{ backgroundColor: '#f5f5f5', color: '#666', width: 'auto', minWidth: '150px' }}
               >
                 Cancelar
               </button>
               <button 
-                className="btn-save" 
+                className="profile-button" 
                 onClick={handleSave}
                 disabled={isLoading}
+                style={{ width: 'auto', minWidth: '200px' }}
               >
                 {isLoading ? (
                   <>
@@ -226,19 +254,62 @@ const EditarPerfilPage = ({ setCurrentPage, showToast, onLogout }) => {
             </button>
           </div>
         </div>
-      </div>
+      </main>
 
       {/* Modal de confirmação de eliminação */}
-      <Modal 
-        isOpen={deleteModalOpen}
-        title="Eliminar Conta"
-        message="Tem a certeza que deseja eliminar a sua conta? Esta ação é irreversível e todos os seus dados serão permanentemente removidos."
-        onConfirm={handleDeleteAccount}
-        onCancel={() => setDeleteModalOpen(false)}
-        confirmText="Sim, eliminar"
-        cancelText="Cancelar"
-        type="danger"
-      />
+      {deleteModalOpen && (
+        <div className="modal-overlay" onClick={handleCloseDeleteModal}>
+          <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={handleCloseDeleteModal}>×</button>
+            
+            <h2 className="modal-title">Eliminar Conta</h2>
+            <p className="modal-message">
+              Tem a certeza que deseja eliminar a sua conta? Esta ação é irreversível e todos os seus dados serão permanentemente removidos.
+            </p>
+            
+            <div className="modal-password-field">
+              <label htmlFor="confirm-password">Confirme a sua password</label>
+              <input
+                type="password"
+                id="confirm-password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className={deletePasswordError ? 'error' : ''}
+                placeholder="Digite a sua password"
+                disabled={isLoading}
+                onKeyPress={(e) => e.key === 'Enter' && handleDeleteAccount()}
+              />
+              {deletePasswordError && (
+                <span className="error-message">{deletePasswordError}</span>
+              )}
+            </div>
+            
+            <div className="modal-actions">
+              <button 
+                className="btn-cancel" 
+                onClick={handleCloseDeleteModal}
+                disabled={isLoading}
+              >
+                Cancelar
+              </button>
+              <button 
+                className="btn-delete-confirm" 
+                onClick={handleDeleteAccount}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <span className="spinner"></span>
+                    Eliminando...
+                  </>
+                ) : (
+                  'Sim, eliminar'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

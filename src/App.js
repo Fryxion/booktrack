@@ -17,7 +17,11 @@ import './styles/App.css';
 
 const AppContent = () => {
   const { isAuthenticated, logout, isBibliotecario } = useAuth();
-  const [currentPage, setCurrentPage] = useState('login');
+  const [currentPage, setCurrentPageState] = useState(() => {
+    // Carregar página do localStorage ou usar 'login' como padrão
+    const savedPage = localStorage.getItem('currentPage');
+    return savedPage || 'login';
+  });
   const [selectedBook, setSelectedBook] = useState(null);
   
   // Estados de feedback
@@ -25,6 +29,12 @@ const AppContent = () => {
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const [forgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false);
   const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
+  
+  // Wrapper para setCurrentPage que também guarda no localStorage
+  const setCurrentPage = (page) => {
+    setCurrentPageState(page);
+    localStorage.setItem('currentPage', page);
+  };
   
   // Adicionar font do Google Fonts
   useEffect(() => {
@@ -64,6 +74,7 @@ const AppContent = () => {
   const confirmLogout = () => {
     setLogoutModalOpen(false);
     logout();
+    localStorage.removeItem('currentPage'); // Limpar página guardada
     showToast('Sessão terminada com sucesso!', 'success');
     setTimeout(() => {
       setCurrentPage('login');
