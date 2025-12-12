@@ -60,11 +60,23 @@ export const authAPI = {
   },
 
   // Alterar password
-  updatePassword: async (senhaAtual, novaSenha) => {
+  updatePassword: async (currentPassword, newPassword) => {
     const response = await api.put('/auth/update-password', {
-      senha_atual: senhaAtual,
-      nova_senha: novaSenha,
+      currentPassword: currentPassword,
+      newPassword: newPassword,
     });
+    return response.data;
+  },
+
+  // Atualizar perfil
+  updateProfile: async (userData) => {
+    const response = await api.put('/auth/update-profile', userData);
+    return response.data;
+  },
+
+  // Eliminar conta
+  deleteAccount: async () => {
+    const response = await api.delete('/auth/delete-account');
     return response.data;
   },
 };
