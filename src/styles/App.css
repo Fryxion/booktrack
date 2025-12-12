@@ -691,18 +691,13 @@ body {
   text-align: center;
 }
 
-.map-placeholder {
+.map-container {
   width: 100%;
   max-width: 800px;
-  height: 400px;
-  background-color: #e5e7eb;
-  border-radius: 0.5rem;
   margin: 2rem auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
-  color: #9ca3af;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 /* ===== PERFIL PAGE ===== */
