@@ -118,7 +118,7 @@ export const reservasAPI = {
 
   // Obter reservas ativas do utilizador
   getMinhas: async () => {
-    const response = await api.get('/reservas/minhas');
+    const response = await api.get(`/reservas`);
     return response.data;
   },
 
@@ -157,7 +157,7 @@ export const emprestimosAPI = {
 
   // Obter histórico de empréstimos do utilizador
   getHistorico: async () => {
-    const response = await api.get('/emprestimos/historico');
+    const response = await api.get('/emprestimos');
     return response.data;
   },
 

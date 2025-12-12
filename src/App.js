@@ -8,6 +8,7 @@ import PerfilPage from './pages/Perfil/App';
 import ReservasPage from './pages/Reservas/App';
 import CatalogoPage from './pages/Catalogo/App';
 import DetalhesPage from './pages/Detalhes/App';
+import AdminPage from './pages/Admin/App';
 import Toast from './components/Toast/App';
 import Modal from './components/Modal/App';
 import './styles/App.css';
@@ -214,6 +215,9 @@ const AppContent = () => {
               setCurrentPage={setCurrentPage}
               showToast={showToast}
             />
+          )}
+          {currentPage === 'admin' && (
+            <AdminPage setCurrentPage={setCurrentPage} />
           )}
         </>
       )}

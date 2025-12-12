@@ -43,6 +43,12 @@ const Header = ({ activePage, setCurrentPage }) => {
             >
               Sobre nós
             </button>
+            <button 
+              onClick={() => setCurrentPage('admin')} 
+              className={activePage === 'admin' ? 'nav-button-active' : 'nav-button'}
+            >
+              ⚙️ Admin
+            </button>
           </nav>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
