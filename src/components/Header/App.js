@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import NotificacoesDropdown from '../Notificacoes/NotificacoesDropdown';
 import '../../styles/App.css';
 
 const Header = ({ activePage, setCurrentPage }) => {
@@ -58,6 +59,8 @@ const Header = ({ activePage, setCurrentPage }) => {
               Olá, {user.nome.split(' ')[0]}
             </span>
           )}
+
+          <NotificacoesDropdown />
           <button onClick={() => setCurrentPage('perfil')} className="user-icon">
             👤
           </button>

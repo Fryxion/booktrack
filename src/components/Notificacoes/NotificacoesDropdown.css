@@ -1,0 +1,248 @@
+.notificacoes-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.notificacoes-button {
+  position: relative;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notificacoes-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.notificacoes-button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.notificacoes-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #ef4444;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border-radius: 9999px;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.25rem;
+}
+
+.notificacoes-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  width: 24rem;
+  max-width: 90vw;
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
+  z-index: 1000;
+  max-height: 32rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.notificacoes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.notificacoes-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.marcar-todas-btn {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.marcar-todas-btn:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.notificacoes-lista {
+  max-height: 24rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.notificacoes-lista ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notificacao-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.2s;
+  align-items: flex-start;
+}
+
+.notificacao-item:hover {
+  background-color: #f9fafb;
+}
+
+.notificacao-item.nao-lida {
+  background-color: #eff6ff;
+}
+
+.notificacao-icone {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.notificacao-conteudo {
+  flex: 1;
+  min-width: 0;
+}
+
+.notificacao-conteudo p {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.875rem;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.notificacao-conteudo p.negrito {
+  font-weight: 600;
+  color: #111827;
+}
+
+.notificacao-conteudo small {
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+.notificacao-acoes {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.btn-acao {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  padding: 0.25rem;
+  color: #3b82f6;
+  border-radius: 0.25rem;
+  transition: all 0.2s;
+  width: 1.75rem;
+  height: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-acao:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.btn-eliminar {
+  color: #ef4444;
+}
+
+.btn-eliminar:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.notificacoes-loading,
+.notificacoes-vazio {
+  padding: 3rem 2rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.notificacoes-loading .spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.notificacoes-vazio p {
+  margin: 0.5rem 0 0.25rem;
+  font-weight: 500;
+  color: #111827;
+}
+
+.notificacoes-vazio small {
+  color: #9ca3af;
+}
+
+.notificacoes-footer {
+  padding: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.ver-todas-btn {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.ver-todas-btn:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Responsivo */
+@media (max-width: 640px) {
+  .notificacoes-dropdown {
+    width: 20rem;
+    right: -1rem;
+  }
+  
+  .notificacao-item {
+    padding: 0.75rem;
+  }
+}
